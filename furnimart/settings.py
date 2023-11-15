@@ -77,14 +77,15 @@ WSGI_APPLICATION = 'furnimart.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'furnimart',
-        'USER': 'rispa1',
+        'NAME': 'woodmart',
+        'USER': 'rispa2',
         'PASSWORD': 'rispa',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '',
     }
 }
 
+AUTH_USER_MODEL='account.User'
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

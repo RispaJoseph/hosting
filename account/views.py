@@ -17,7 +17,7 @@ def sign_up(request):
             form.save()
             username = form.cleaned_data.get('username')
             print(username)
-            return redirect('login')
+            return redirect('account:login')
     else: 
         form = SignUpForm()
     context = {
@@ -28,35 +28,37 @@ def sign_up(request):
 
 # .............Login view function....................
 
-class EmailBackend(ModelBackend):
-    def authenticate(self, request, email=None, password=None, **kwargs):
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return None
+# class EmailBackend(ModelBackend):
+#     def authenticate(self, request, email=None, password=None, **kwargs):
+#         try:
+#             user = User.objects.get(email=email)
+#         except User.DoesNotExist:
+#             return None
 
-        if user.check_password(password):
-            return user
-        return None
+#         if user.check_password(password):
+#             return user
+#         return None
 
 def login_view(request):
     if request.user.is_authenticated:
         messages.warning(request, "Hey, you are already logged in.")
-        return redirect("index")
+        return redirect("account:index")
 
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = request.POST['email']
+        password = request.POST['password']
         print(email, password)
 
         user = get_object_or_404(User, email=email)
-        user = authenticate(request, email=email, password=password, backend=EmailBackend)
+        # user=User.objects.get(email=email)
+        user = authenticate(request, email=email, password=password)
+        print (user)
 
         if user is not None:
             login(request, user)
             request.session['logged_in'] = True  # Set a session variable if needed
             messages.success(request, 'Login successful.')
-            return redirect("login")  # Redirect to the desired page after successful login
+            return redirect("account:index")  # Redirect to the desired page after successful login
         else:
             messages.warning(request, 'Email or Password is incorrect.')
 
@@ -69,7 +71,7 @@ def login_view(request):
 def logoutUser(request):
     logout(request)
     messages.success(request,f'You logged out')
-    return redirect('userauths:login') 
+    return redirect('account:login') 
 
 def index(request):
-    return render(request, 'user/index.html')
+    return render(request, 'mart/index.html')
