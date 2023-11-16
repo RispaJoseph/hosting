@@ -760,18 +760,21 @@
                 </div>
             </div>
         </section>
+
         <section class="popular-categories section-padding mt-15 mb-25">
             <div class="container wow fadeIn animated">
                 <h3 class="section-title mb-20"><span>Popular</span> Categories</h3>
                 <div class="carausel-6-columns-cover position-relative">
                     <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-arrows"></div>
                     <div class="carausel-6-columns" id="carausel-6-columns">
+                        {% for c in category %}
                         <div class="card-1">
                             <figure class=" img-hover-scale overflow-hidden">
-                                <a href="shop-grid-right.html"><img src="{% static 'assets/imgs/shop/category-thumb-1.jpg' %}" alt=""></a>
+                                <a href="shop-grid-right.html"><img src="{{ c.image.url }}" alt=""></a>
                             </figure>
-                            <h5><a href="shop-grid-right.html">T-Shirt</a></h5>
+                            <h5><a href="shop-grid-right.html">{{ c.title }}</a></h5>
                         </div>
+                        {% endfor %}
                         <!-- <div class="card-1">
                             <figure class=" img-hover-scale overflow-hidden">
                                 <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/shop/category-thumb-2.jpg' %}" alt=""></a>
