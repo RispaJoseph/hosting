@@ -1,5 +1,4 @@
 from django.db import models
-
 from shortuuidfield import ShortUUIDField
 from django.utils.html import mark_safe
 from account.models import User
@@ -57,7 +56,7 @@ class Product(models.Model):
   
   price = models.DecimalField(max_digits =10, decimal_places =2, default = 1.99 )
   old_price = models.DecimalField(max_digits =10, decimal_places =2, default = 2.99)
-
+  stock = models.IntegerField(default=1)
   specifications = models.TextField(null =True, blank =True)
   # tags = models.ForeignKey(Tags, on_delete = models.SET_NULL, null =True)
   
