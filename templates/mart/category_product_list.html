@@ -63,22 +63,22 @@
                               </div>
                           </div>
                       </div>
-                        <!-- {%for c in categories%}
+                        {% comment %} {%for c in categories%}
                         <div class="entry-meta meta-1 font-xs mt-15 mb-15">
                             <span class="post-by">{{c.category.count}} product{{c.category.count|pluralize}}</span>
                             
                         </div>
-                        {% endfor %} -->
+                        {% endfor %} {% endcomment %}
                         
                     
-                        <div class="row product-grid-3">
+                        <div class="row product-grid-3" >
 
                             {% for p in products%}
                             <div class="col-lg-3 col-md-4 col-12 col-sm-6">
                                 <div class="product-cart-wrap mb-30">
                                     <div class="product-img-action-wrap">
                                         <div class="product-img product-img-zoom">
-                                            <a href="shop-product-right.html">
+                                            <a href="{%url 'appmart:product-detail' p.pid %}">
                                                 <img class="default-img" src="{{p.image.url}}" alt="">
                                                 <img class="hover-img" src="{{p.image.url}}" alt="">
                                             </a>
@@ -96,7 +96,7 @@
                                         <div class="product-category">
                                             <a href="shop-grid-right.html">{{p.category}}</a>
                                         </div>
-                                        <h2><a href="shop-product-right.html">{{p.title}}</a></h2>
+                                        <h2><a href="{% url 'appmart:product-detail' p.pid%}">{{p.title}}</a></h2>
                                         <div class="rating-result" title="90%">
                                             <span>
                                                 <span>90%</span>

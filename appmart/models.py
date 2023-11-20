@@ -19,8 +19,15 @@ RATING = (
   
 
 
-def user_directory_path(instance,filename):
-  return 'user_{0}/{1}'.format(instance.user.id, filename)
+# def user_directory_path(instance,filename):
+#   return 'user_{0}/{1}'.format(instance.user.id, filename)
+
+def user_directory_path(instance, filename):
+    if instance.user and instance.user.id:
+        return 'user_{0}/{1}'.format(instance.user.id, filename)
+    else:
+        # Handle the case when user or user.id is None
+        return 'user_unknown/{0}'.format(filename)
 
 
 class Category(models.Model):
@@ -88,7 +95,7 @@ class Product(models.Model):
 
 class ProductImages(models.Model):
   Images = models.ImageField(upload_to="products-images", default = "product.jpg")
-  product = models.ForeignKey(Product, on_delete = models.SET_NULL,null =True)
+  product = models.ForeignKey(Product, related_name="p_images", on_delete = models.SET_NULL,null =True)
   date = models.DateField(auto_now_add =True)
   
   class Meta:

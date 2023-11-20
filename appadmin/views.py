@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse , get_object_or_404, HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
-from appadmin.forms import CreateProductForm
+from appadmin.forms import CreateProductForm, CategoryForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
@@ -38,7 +38,7 @@ def dashboard(request):
           'category_count':category_count
      }
 
-     return render(request, 'admin/admin_index.html',context)
+     return render(request, 'admintemp/admin_index.html',context)
 
 
 def admin_products_list(request):
@@ -46,7 +46,107 @@ def admin_products_list(request):
      context = {
           "products":products
      }
-     return render(request,'admin/admin_products_list.html', context)
+     return render(request,'admintemp/admin_products_list.html', context)
+
+
+def admin_category_list(request):
+    categories = Category.objects.all()
+    context = {
+        "category":categories
+    }
+    return render(request,'admintemp/admin_category_list.html')
+
+
+
+
+def admin_add_category(request):
+    if request.method == 'POST':
+       
+            title = request.POST.get('title')
+            category_data=Category(title=title,
+            image=request.FILES.get('imagefield'))
+            category_data.save()
+            
+            return redirect('appadmin:admin_category_list')
+    else:
+        form = CategoryForm()
+
+        # return render(request,'admintemp/admin_add_category.html', {'form':form})
+    return render(request,'admintemp/admin_add_category.html',{'form':form})
+
+
+
+
+# def admin_add_product(request):
+#     categories = Category.objects.all()
+#     context = {
+#         "category":categories
+#     }
+#     if request.method=='POST':
+#          title=request.POST.get('title')
+#          description=request.POST.get('description')
+#          category=request.POST.get('category')
+#          price=request.POST.get('price')
+#          old_price=request.POST.get('old_price')
+#          stock=request.POST.get('stock')
+#          image=request.FILES['image']
+#          specification=request.POST.get('specification')
+
+#          category = get_object_or_404(Category,title=category)
+#          print(title)
+#          product_data=Product(title=title,description=description,price=price,old_price=old_price,stock=stock,image=image)
+#          product_data.save()
+
+#          return redirect('appadmin:admin_products_list')
+#     else:
+#         return render(request,'admintemp/admin_add_product.html')
+#     return render(request,'admintemp/admin_add_product.html',context)
+
+
+
+def admin_add_product(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+    categories = Category.objects.all()
+   
+
+    if request.method == 'POST':
+        product_name= request.POST.get('title')
+        # product_sk_id= request.POST.get('sku')
+        description= request.POST.get('description')
+        max_price= request.POST.get('old_price')
+        sale_price= request.POST.get('price')
+        category_name= request.POST.get('category')
+       
+       
+
+        category = get_object_or_404(Category, title=category_name)
+        
+
+        product = Product(
+            title=product_name,
+            # sku=product_sk_id,
+            category=category,
+            
+            description=description,
+            old_price=max_price,
+            price=sale_price,
+            image=request.FILES['image_feild']  # Make sure your file input field is named 'product_image'
+        )
+        product.save()
+
+        return redirect('appadmin:admin_products_list')
+    else:
+        form=CreateProductForm()
+    content = {
+        'categories': categories,
+          
+        'form': form
+    }
+    return render(request,'admintemp/admin_add_product.html', content)
+
+
+
 
 
 def admin_products_details(request, pid):
@@ -72,7 +172,7 @@ def admin_products_details(request, pid):
                 'product': product,
                 
             }
-            return render(request, 'admin/admin_products_details.html', context)
+            return render(request, 'admintemp/admin_products_details.html', context)
 
     else:
         form = CreateProductForm(instance=product)
@@ -82,7 +182,7 @@ def admin_products_details(request, pid):
         'product': product,
         
     }
-    return render(request, 'admin/admin_products_details.html', context)
+    return render(request, 'admintemp/admin_products_details.html', context)
 
 
 @login_required(login_url='appadmin:admin_login')
@@ -102,7 +202,7 @@ def users_list(request):
         'users': users
     }
       
-    return render(request,'admin/users_list.html',context)
+    return render(request,'admintemp/users_list.html',context)
 
 @login_required(login_url='appadmin:admin_login')
 def block_unblock_user(request,user_id):

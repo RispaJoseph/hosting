@@ -1,17 +1,17 @@
 {% extends 'admintemp/base.html' %}
 {% load static %}
-{% block title %} Product list {% endblock %}
+{% block title %} Category list {% endblock %}
 {% block  body %}
 
 <section class="content-main">
     <div class="content-header">
         <div>
-            <h2 class="content-title card-title">Products List</h2>
+            <h2 class="content-title card-title">Category list</h2>
             
         </div>
         <div>
 
-            <a href="#" class="btn btn-primary btn-sm rounded">Create new</a>
+            <a href="{% url 'appadmin:admin_add_category' %}" class="btn btn-primary btn-sm rounded">Create new</a>
         </div>
     </div>
     <div class="card mb-4">
@@ -50,26 +50,32 @@
                                 <thead>
                                     <tr>
                                         <th>Image</th>
-                                        <th>Product</th>
+                                        <!-- <th>Product</th> -->
                                         <th>Category</th>
-                                        <th>Status</th>
-                                        <th>Sale Price</th>                                    
-                                        {% comment %} <th>Stock Quantity</th> {% endcomment %}
+                                        <th>Total</th>
+                                        <!-- <th>Sale Price</th>                                     -->
+                                        <!-- <th class="text-end">Stock Quantity</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr><p>Click to view details</p></tr>
                                     
-                                    {% for product in products %}
+                                    {% for c in categories %}
                                     <tr>
                                         <td>
-                                            <img src="{{product.image.url}}" class="img-sm img-thumbnail" alt="">
+                                            {% if c.image %}
+                                            <img src="{{c.image.url}}" class="img-sm img-thumbnail" alt="">
+
+                                            {% else %}
+                                            <p>No image</p>
+                                            {% endif %}
                                         </td>
                                        
-                                        <td><a href="{% url 'appadmin:admin_products_details' product.pid  %}"> <h6 class="mb-0">{{ product.title}}</h6></a></td>
-                                        <td><a href="{% url 'appadmin:admin_products_details' product.pid %}"> <h6 class="mb-0">{{ product.category}}</h6></a></td>
-                                        <td><a href="{% url 'appadmin:admin_products_details' product.pid %}"> <h6 class="mb-0">{% if product.status %} <span style="color: rgb(143, 143, 39);">Active</span>  {% else %} <span style="color: rgb(120, 40, 40);">Blocked</span> {%endif %}</h6></a></td>
-                                        <td>{{ product.price }}</td>
+                                        <td><a href="#"> <h6 class="mb-0">{{ c.title}}</h6></a></td>
+                                        <td><a href="#"> <h6 class="mb-0">{{ c.category.count}}</h6></a></td>
+                                        
+                                        <!-- <td><a href="#"> <h6 class="mb-0">{% if product.status %} <span style="color: rgb(143, 143, 39);">Active</span>  {% else %} <span style="color: rgb(120, 40, 40);">Blocked</span> {%endif %}</h6></a></td> -->
+                                        <!-- <td>{{ category.price }}</td> -->
                                         <td class="text-end">
                                             <span class="badge rounded-pill {% if product.stock_count != '0' %} alert-success {% else %} alert-danger {% endif %}">
                                                 {% if product.stock_count == '0' %} Out of Stock  {% else %}{{product.stock_count}}  {% endif %} </span>

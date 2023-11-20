@@ -44,3 +44,23 @@ def product_all_list(request):
     }
     return render(request, 'mart/product_all_list.html',context)
 
+
+
+def product_detail(request,pid):
+    product = Product.objects.get(pid = pid)
+    p_image =product.p_images.all()
+    category = Category.objects.all()
+    products = Product.objects.filter(category=product.category).exclude(pid=pid)[:4]
+    
+    
+    context={
+        "product":product,
+        "p_image":p_image,
+        "category":category,
+        "products":products
+        
+        
+        
+    }
+    return render (request,'mart/product_detail.html',context)
+
