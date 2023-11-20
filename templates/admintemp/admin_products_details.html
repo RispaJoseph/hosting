@@ -96,14 +96,23 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="mb-4">
-                                    <a href="#" class="btn btn-primary btn-sm rounded">Delete</a>
+                                    <a href="{% url 'appadmin:delete_product' product.pid  %}" class="btn btn-primary btn-sm rounded">Delete</a>
                                     
                                 </div>  
                             </div>
                             <div class="col-lg-2">
                                 <div class="mb-4">
-                                    <a href="#" class="btn btn-primary btn-sm rounded">Block Product</a>
-                                                                    
+                                    {% comment %} <button type="submit" class="btn btn-sm {% if not product.status %}btn-danger{% else %}btn-success{% endif %}">
+                                        {% if not product.status %}Unblock{% else %}Block{% endif %}
+                                    </button>
+
+                                    <a href="#" class="btn btn-primary btn-sm rounded">Block</a> {% endcomment %}
+                                    
+                                    <button type="submit" class="btn btn-sm {% if not product.status %}btn-danger{% else %}btn-success{% endif %}">
+                                        {% if not product.status %}Unblock{% else %}Block{% endif %}
+                                    </button>
+                                    <a href="{% url 'appadmin:block_unblock_products' product.pid  %}" class="btn btn-primary btn-sm rounded">Unblock</a>
+
                                 </div>  
                             </div>
                         </div>

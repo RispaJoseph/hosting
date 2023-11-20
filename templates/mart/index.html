@@ -770,7 +770,11 @@
                         {% for c in category %}
                         <div class="card-1">
                             <figure class=" img-hover-scale overflow-hidden">
-                                <a href="shop-grid-right.html"><img src="#" alt=""></a>
+                                {% if c.image %}
+                                <a href="shop-grid-right.html"><img src="{{c.image.url}}" alt=""></a>
+                                {% else %}
+                                <p>No image</p>
+                                {% endif %}
                             </figure>
                             <h5><a href="shop-grid-right.html">{{ c.title.url }}</a></h5>
                         </div>

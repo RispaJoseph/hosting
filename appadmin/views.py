@@ -49,58 +49,65 @@ def admin_products_list(request):
      return render(request,'admintemp/admin_products_list.html', context)
 
 
+# def admin_category_list(request):
+#     categories = Category.objects.all()
+#     context = {
+#         "category":categories
+#     }
+#     return render(request,'admintemp/admin_category_list.html')
+
+
+
 def admin_category_list(request):
+    if not request.user.is_authenticated:
+        return redirect('appadmin:admin_login')
+    
     categories = Category.objects.all()
+    
     context = {
-        "category":categories
+        'categories':categories
     }
-    return render(request,'admintemp/admin_category_list.html')
+    
+    return render(request,'admintemp/admin_category_list.html',context)
+
+
+
+
+# def admin_add_category(request):
+#     if request.method == 'POST':
+       
+#             title = request.POST.get('title')
+#             category_data=Category(title=title,
+#             image=request.FILES.get('imagefield'))
+#             category_data.save()
+            
+#             return redirect('appadmin:admin_category_list')
+#     else:
+#         form = CategoryForm()
+
+#         # return render(request,'admintemp/admin_add_category.html', {'form':form})
+#     return render(request,'admintemp/admin_add_category.html',{'form':form})
 
 
 
 
 def admin_add_category(request):
     if request.method == 'POST':
-       
-            title = request.POST.get('title')
-            category_data=Category(title=title,
-            image=request.FILES.get('imagefield'))
-            category_data.save()
-            
-            return redirect('appadmin:admin_category_list')
+        cat_title = request.POST.get('category_name')
+        
+        cat_data = Category(title=cat_title,
+                            image=request.FILES.get('category_image'))
+    
+        cat_data.save()
     else:
-        form = CategoryForm()
-
-        # return render(request,'admintemp/admin_add_category.html', {'form':form})
-    return render(request,'admintemp/admin_add_category.html',{'form':form})
-
+        return render(request, 'admintemp/admin_add_category.html')
+    
+    return render(request, 'admintemp/admin_add_category.html')
 
 
 
-# def admin_add_product(request):
-#     categories = Category.objects.all()
-#     context = {
-#         "category":categories
-#     }
-#     if request.method=='POST':
-#          title=request.POST.get('title')
-#          description=request.POST.get('description')
-#          category=request.POST.get('category')
-#          price=request.POST.get('price')
-#          old_price=request.POST.get('old_price')
-#          stock=request.POST.get('stock')
-#          image=request.FILES['image']
-#          specification=request.POST.get('specification')
 
-#          category = get_object_or_404(Category,title=category)
-#          print(title)
-#          product_data=Product(title=title,description=description,price=price,old_price=old_price,stock=stock,image=image)
-#          product_data.save()
 
-#          return redirect('appadmin:admin_products_list')
-#     else:
-#         return render(request,'admintemp/admin_add_product.html')
-#     return render(request,'admintemp/admin_add_product.html',context)
 
 
 
@@ -146,6 +153,30 @@ def admin_add_product(request):
     return render(request,'admintemp/admin_add_product.html', content)
 
 
+
+@login_required(login_url='appadmin:admin_login')
+def block_unblock_products(request, pid):
+  if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+  product = get_object_or_404(Product, pid=pid)
+  if product.status:
+    product.status=False
+  else:
+      product.status=True
+  product.save()
+  return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def delete_product(request,pid):
+    if not request.user.is_authenticated:
+        return redirect('appadmin:admin_login')
+    try:
+        product = Product.objects.get(pid=pid)
+        product.delete()
+        return redirect('appadmin:admin_products_list')
+    except Product.DoesNotExist:
+        return HttpResponse("Product not found", status=404)
 
 
 

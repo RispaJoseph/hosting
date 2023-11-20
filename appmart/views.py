@@ -4,7 +4,7 @@ from appmart.models import Product, Category, ProductImages
 # Create your views here.
 
 def index(request):
-    products = Product.objects.filter(featured = True)
+    products = Product.objects.filter(featured = True, status = True)
     latest = Product.objects.all().order_by("-id")[:10]
     category = Category.objects.all()
 
@@ -26,7 +26,7 @@ def category_list_view(request):
 
 def category_product_list_view(request, cid):
     category = Category.objects.get(cid=cid)
-    products = Product.objects.filter(category=category)
+    products = Product.objects.filter(category=category, status = True)
 
     context = {
         "category":category,
@@ -35,7 +35,7 @@ def category_product_list_view(request, cid):
     return render(request, "mart/category_product_list.html",context)
 
 def product_all_list(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(status = True)
     category = Category.objects.all()
 
     context = {

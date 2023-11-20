@@ -35,6 +35,9 @@ class Category(models.Model):
     title = models.CharField(max_length=100, default="Autoparts")
     image = models.ImageField(upload_to='category', default="category.jpg")
 
+    is_blocked = models.BooleanField(default=False)
+
+
     class Meta:
         verbose_name_plural = "Categories"
 

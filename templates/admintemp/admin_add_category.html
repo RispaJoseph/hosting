@@ -25,13 +25,13 @@
                         {% comment %} {{ form.as_p }} <!-- Display form fields --> {% endcomment %}
                         <div class="mb-4">
                             <label for="{{form.description.id_for_label}}" class="form-label">Title</label>
-                            <input placeholder="Type here" class="form-control" rows="4" name="title"></input>
+                            <input placeholder="Type here" class="form-control" rows="4" name="category_name"></input>
                         </div>
 
                         <div class="mb-4">
                             <div class=input-upload> 
-                            <label for="{{form.description.id_for_label}}" class="form-label">Image</label>
-                            <input  class="form-control" type="file" required="True" name="imagefield"></input>
+                            <label for="{{form.image.id_for_label}}" >Image</label>
+                            <input  class="form-control" type="file" required="True" name="category_image"></input>
                             </div>
                         </div>
 
