@@ -82,7 +82,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="{{ form.image.id_for_label }}">Image</label>
-                                    <input type="file" name="image">
+                                    {% comment %} <input type="file" name="image"> {% endcomment %}
+                                    {{form.new_image}}
                                 </div>
                             </div>
 

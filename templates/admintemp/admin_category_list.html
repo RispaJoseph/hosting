@@ -53,7 +53,7 @@
                                         <!-- <th>Product</th> -->
                                         <th>Category</th>
                                         <th>Total</th>
-                                        <th>Status</th> 
+                                        <th>Options</th> 
                                         <!-- <th class="text-end">Stock Quantity</th> -->
                                     </tr>
                                 </thead>
@@ -62,16 +62,17 @@
                                     
                                     {% for c in categories %}
                                     <tr>
-                                        <td>
+                                        <td><a href="{% url 'appadmin:admin_category_edit' c.cid%}">
                                             {% if c.image %}
                                             <img src="{{c.image.url}}" class="img-sm img-thumbnail" alt="">
 
                                             {% else %}
                                             <p>No image</p>
                                             {% endif %}
+                                        </a>
                                         </td>
                                        
-                                        <td><a href="#"> <h6 class="mb-0">{{ c.title}}</h6></a></td>
+                                        <td><a href="{% url 'appadmin:admin_category_edit' c.cid%}"> <h6 class="mb-0">{{ c.title}}</h6></a></td>
                                         <td><a href="#"> <h6 class="mb-0">{{ c.category.count}}</h6></a></td>
                                         
                                         <!-- <td><a href="#"> <h6 class="mb-0">{% if product.status %} <span style="color: rgb(143, 143, 39);">Active</span>  {% else %} <span style="color: rgb(120, 40, 40);">Blocked</span> {%endif %}</h6></a></td> -->
@@ -80,7 +81,23 @@
                                             <span class="badge rounded-pill {% if product.stock_count != '0' %} alert-success {% else %} alert-danger {% endif %}">
                                                 {% if product.stock_count == '0' %} Out of Stock  {% else %}{{product.stock_count}}  {% endif %} </span>
                                         </td> {% endcomment %}
-                                        <td><a href="#"> <h6 class="mb-0">{% if c.is_blocked%}Blocked{%else%}Active{%endif%}</h6></a></td>
+                                        {% comment %} <td><a href="#"> <h6 class="mb-0">{% if c.is_blocked%}Blocked{%else%}Active{%endif%}</h6></a></td> {% endcomment %}
+
+                                        <td class="text-end" >
+                                            <div class="dropdown">
+                                             
+                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="{% url 'appadmin:admin_category_edit' c.cid%}">View detail</a>
+                                                    <a class="dropdown-item" href="{% url 'appadmin:admin_category_edit' c.cid%}">edit_info</a>
+    
+    
+                                                    <a class="dropdown-item" href="#">{% if not category.is_blocked %} Available {% else %} Unavailable{% endif %}</a>
+                                                    <a class="dropdown-item text-danger" href="{% url 'appadmin:delete_category' c.cid %}">Delete</a>
+                                                </div>
+                                            </div> <!-- dropdown //end -->
+                                         
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

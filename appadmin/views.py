@@ -53,12 +53,7 @@ def admin_products_list(request):
      return render(request,'admintemp/admin_products_list.html', context)
 
 
-# def admin_category_list(request):
-#     categories = Category.objects.all()
-#     context = {
-#         "category":categories
-#     }
-#     return render(request,'admintemp/admin_category_list.html')
+
 
 
 
@@ -77,20 +72,6 @@ def admin_category_list(request):
 
 
 
-# def admin_add_category(request):
-#     if request.method == 'POST':
-       
-#             title = request.POST.get('title')
-#             category_data=Category(title=title,
-#             image=request.FILES.get('imagefield'))
-#             category_data.save()
-            
-#             return redirect('appadmin:admin_category_list')
-#     else:
-#         form = CategoryForm()
-
-#         # return render(request,'admintemp/admin_add_category.html', {'form':form})
-#     return render(request,'admintemp/admin_add_category.html',{'form':form})
 
 
 
@@ -109,19 +90,70 @@ def admin_add_category(request):
     return render(request, 'admintemp/admin_add_category.html')
 
 
-# @login_required(login_url='appadmin:admin_login')
-# def admin_block_category(request, cid):
+
+
+
+def admin_category_edit(request):
+    return render(request, 'admintemp/admin_category_edit.html')
+
+
+def admin_category_edit(request, cid):
+    if not request.user.is_authenticated:
+        return redirect('appadmin:admin_login')
+
+    # Using get_object_or_404 to get the Category or return a 404 response if it doesn't exist
+    categories = get_object_or_404(Category, cid=cid)
+
+    if request.method == 'POST':
+        # Update the fields of the existing category object
+        cat_title = request.POST.get("category_name")
+        cat_image = request.FILES.get('category_image')
+
+        # Update the category object with the new title and image
+        categories.title = cat_title
+        if cat_image is not None:
+            categories.image = cat_image
+
+        
+        # Save the changes to the database
+        categories.save()
+
+        # Redirect to the category list page after successful update
+        return redirect('appadmin:admin_category_list')
+
+    # If the request method is GET, render the template with the category details
+    context = {
+        "categories_title": categories.title,
+        "categories_image": categories.image,
+    }
+
+    return render(request, 'admintemp/admin_category_edit.html', context)
+
+
+def delete_category(request,cid):
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+    try:
+        category=Category.objects.get(cid=cid)
+    except ValueError:
+        return redirect('appadmin:admin_category_list')
+    category.delete()
+
+    return redirect('appadmin:admin_category_list')
+
+
+# def available_category(request,cid):
 #     if not request.user.is_authenticated:
 #         return HttpResponse("Unauthorized", status=401)
+    
 #     category = get_object_or_404(Category, cid=cid)
+    
 #     if category.is_blocked:
-#         category.is_blocked=True
-#     else:
 #         category.is_blocked=False
+       
+#     else:
+#         category.is_blocked=True
 #     category.save()
-
-#     Product.objects.filter(category=category).update(is_blocked=True)
-
 #     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
@@ -205,33 +237,56 @@ def admin_add_product(request):
 
 
 
-def admin_update_product(request, pid):
-    if not request.user.is_authenticated:
-        return HttpResponse("Unauthorized", status=401)
+# def admin_update_product(request, pid):
+#     if not request.user.is_authenticated:
+#         return HttpResponse("Unauthorized", status=401)
     
-    product = get_object_or_404(Product, pid=pid) 
+#     product = get_object_or_404(Product, pid=pid) 
+
+#     if request.method == "POST":
+        
+#         form = CreateProductForm(request.POST,instance=product)
+#         if form.is_valid():
+#             product=form.save(commit=False)
+#             product_image = request.FILES['image']
+            
+#             if product_image is not None:
+#                 product.image = product_image
+#             product.save()
+#             return HttpResponseRedirect(reverse('appadmin:admin_products_list'))
+#     else:
+#         form = CreateProductForm(instance=product)
+#     context = {
+#         'product' : product,
+#         'form' : form
+#     }
+        
+    
+#     return render(request, 'admintemp/admin_products_details.html', context)
+
+
+
+def admin_update_product(request, pid):
+    # Retrieve the product instance using its ID (pid)
+    product = get_object_or_404(Product, pid=pid)
+    print("Hello")
 
     if request.method == "POST":
-        
-        form = CreateProductForm(request.POST,instance=product)
+        print("hello")
+        # Bind the product instance to the form and update it with the POST data
+        form = CreateProductForm(request.POST,request.FILES, instance=product)
+        title=form.cleaned_data['title']
+        print(title)
+        print(pid)
         if form.is_valid():
-            product=form.save(commit=False)
-            product_image = request.FILES['image']
-            
-            if product_image is not None:
-                product.image = product_image
-            product.save()
-            return HttpResponseRedirect(reverse('appadmin:admin_products_list'))
+            form.save()
+            # Redirect to the product details or any other desired page after successful update
+            return redirect('appadmin:admin_products_list')
     else:
+        # If it's a GET request, create a form instance populated with the product data
         form = CreateProductForm(instance=product)
-    context = {
-        'product' : product,
-        'form' : form
-    }
-        
     
-    return render(request, 'admintemp/admin_products_details.html', context)
-
+    return render(request, 'admintemp/admin_products_details.html', {'form': form, 'product': product})
 
 
 
@@ -336,19 +391,3 @@ def block_unblock_user(request,user_id):
   
 
 
-# def add_product(request):
-#     if request.method=='POST':
-#          title=request.POST.get('title')
-#          description=request.POST.get('description')
-#          price=request.POST.get('price')
-#          old_price=request.POST.get('old_price')
-#          stock=request.POST.get('stock')
-#          image=request.FILES['image']
-#          print(title)
-#          product_data=Product(title=title,description=description,price=price,old_price=old_price,stock=stock,image=image)
-#          product_data.save()
-#          print(title)
-#          print(product_data)
-#          return redirect ('login')
-    
-#     return render(request,'add_product.html')
