@@ -32,12 +32,12 @@
                                             {% endfor %}
                                         </div>
                                         <!-- THUMBNAILS -->
-                                        <div class="slider-nav-thumbnails pl-15 pr-15">
+                                        {% comment %} <div class="slider-nav-thumbnails pl-15 pr-15">
                                             <div><img src="{{product.image.url}}" alt="product image"></div>
                                             {% for p in p_image %}
                                             <div><img src="{{p.Images.url}}" alt="product image"></div>
                                             {% endfor %}
-                                        </div>
+                                        </div> {% endcomment %}
                                     </div>
                                     <!-- End Gallery -->
                                     

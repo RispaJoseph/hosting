@@ -35,15 +35,17 @@ class Category(models.Model):
     title = models.CharField(max_length=100, default="Autoparts")
     image = models.ImageField(upload_to='category', default="category.jpg")
 
-    is_blocked = models.BooleanField(default=False)
+    
 
 
     class Meta:
         verbose_name_plural = "Categories"
 
     def category_image(self):
-        return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
-
+        if self.image:
+          return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
+        else:
+           return "NO Image Available"
     def __str__(self):
         return self.title
     

@@ -80,7 +80,7 @@
                                             <span class="badge rounded-pill {% if product.stock_count != '0' %} alert-success {% else %} alert-danger {% endif %}">
                                                 {% if product.stock_count == '0' %} Out of Stock  {% else %}{{product.stock_count}}  {% endif %} </span>
                                         </td> {% endcomment %}
-                                        <td><a href="#"> <h6 class="mb-0">Block</h6></a></td>
+                                        <td><a href="#"> <h6 class="mb-0">{% if c.is_blocked%}Blocked{%else%}Active{%endif%}</h6></a></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

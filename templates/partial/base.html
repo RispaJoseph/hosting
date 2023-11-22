@@ -216,8 +216,19 @@
                                   <li><a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}" alt="">Pусский</a></li>
                               </ul>
                           </li>
-                          <li><i class="fi-rs-user"></i><a href="page-login-register.html">Log In / Sign Up</a></li>
+                          {% comment %} <li><i class="fi-rs-user"></i><a href="page-login-register.html">Log In / Sign Up</a></li> {% endcomment %}
+                          {% comment %} <li><i class="fi-rs-user"></i><a href="{%url 'account:logout' %}">Sign Out</a></li> {% endcomment %}
+
+
+                          {% if request.session.otp or request.user.is_authenticated %}
+
                           <li><i class="fi-rs-user"></i><a href="{%url 'account:logout' %}">Sign Out</a></li>
+                          
+                          {%else%}
+                          <li><i class="fi-rs-user"></i><a href="{% url 'account:login' %}">Log In / Sign Up</a></li>
+                          
+
+                          {% endif %}
                       </ul>
                   </div>
               </div>

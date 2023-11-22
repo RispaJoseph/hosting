@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.views.decorators.cache import never_cache
 from .forms import SignUpForm
 from django.contrib.auth import login,authenticate,logout
 from django.contrib import messages
@@ -59,14 +60,14 @@ def  otp_verification(request):
         nameuser=User(username=request.session['username'],email=request.session['email'],password=encryptedpassword)
         nameuser.save()
         messages.info(request,'signed in successfully...')
-        User.is_active=True
+        User.is_active=True 
         return redirect('appmart:index')
     else:
         messages.error(request,"otp doesn't match")
         return render(request,'user/otp.html')
 
 
-
+@never_cache
 def login_view(request):
     if request.user.is_authenticated:
         messages.warning(request, "Hey, you are already logged in.")
@@ -99,7 +100,7 @@ def login_view(request):
 def logoutUser(request):
     logout(request)
     messages.success(request,f'You logged out')
-    return redirect('account:login') 
+    return redirect('appmart:index') 
 
 # def index(request):
 #     return render(request, 'mart/index.html')

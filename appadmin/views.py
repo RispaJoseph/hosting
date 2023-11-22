@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse , get_object_or_404, HttpResponseRedirect
+from django.urls import reverse
+from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate,login,logout
 from appadmin.forms import CreateProductForm, CategoryForm
 from django.contrib.auth.decorators import login_required
@@ -8,6 +10,7 @@ from appmart.models import *
 
 # Create your views here.
 
+@never_cache
 def admin_login(request):
     
         if request.method=='POST':
@@ -19,6 +22,7 @@ def admin_login(request):
                 login(request,user)
                 return redirect('appadmin:dashboard')
         return render(request, 'admin_login.html')
+
 
 def admin_logout(request):
     logout(request)
@@ -105,6 +109,20 @@ def admin_add_category(request):
     return render(request, 'admintemp/admin_add_category.html')
 
 
+# @login_required(login_url='appadmin:admin_login')
+# def admin_block_category(request, cid):
+#     if not request.user.is_authenticated:
+#         return HttpResponse("Unauthorized", status=401)
+#     category = get_object_or_404(Category, cid=cid)
+#     if category.is_blocked:
+#         category.is_blocked=True
+#     else:
+#         category.is_blocked=False
+#     category.save()
+
+#     Product.objects.filter(category=category).update(is_blocked=True)
+
+#     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 
@@ -151,6 +169,70 @@ def admin_add_product(request):
         'form': form
     }
     return render(request,'admintemp/admin_add_product.html', content)
+
+
+# def admin_update_product(request,pid):
+#     if not request.user.is_authenticated:
+#         return HttpResponse("Unauthorized", status=401)
+#     product = get_object_or_404(Product, pid=pid) 
+
+
+#     if request.method == "POST":
+
+#         title = request.POST.get('title')
+#         category = request.POST.get('category')
+#         old_price = request.POST.get('old_price')
+#         price = request.POST.get('price')
+#         description = request.POST.get('description')
+#         stock = request.POST.get('stock')
+
+#         # Update the fields of the fetched product instance
+#         product.title = title
+#         product.category = category
+#         product.old_price = old_price
+#         product.price = price
+#         product.description = description
+#         product.stock = stock
+
+
+#         product.save()
+
+#         return HttpResponseRedirect(reverse('appadmin:admin_products_list'))
+#     else:
+#         form = CreateProductForm(instance=product)
+#     return render(request, 'admintemp/admin_products_details.html',{'form':form})
+
+
+
+
+def admin_update_product(request, pid):
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+    
+    product = get_object_or_404(Product, pid=pid) 
+
+    if request.method == "POST":
+        
+        form = CreateProductForm(request.POST,instance=product)
+        if form.is_valid():
+            product=form.save(commit=False)
+            product_image = request.FILES['image']
+            
+            if product_image is not None:
+                product.image = product_image
+            product.save()
+            return HttpResponseRedirect(reverse('appadmin:admin_products_list'))
+    else:
+        form = CreateProductForm(instance=product)
+    context = {
+        'product' : product,
+        'form' : form
+    }
+        
+    
+    return render(request, 'admintemp/admin_products_details.html', context)
+
+
 
 
 

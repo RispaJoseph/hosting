@@ -16,6 +16,8 @@ urlpatterns = [
     path('admin_add_category',views.admin_add_category,name='admin_add_category'),
     path('block_unblock_products/<str:pid>',views.block_unblock_products,name='block_unblock_products'),
     path('delete_product/<str:pid>',views.delete_product,name='delete_product'),
+    path('admin_update_product/<str:pid>/', views.admin_update_product, name='admin_update_product'),
+    # path('admin_block_category/<str:cid>',views.admin_block_category,name='admin_block_category'),
     
     # path('add_product/',views.add_product,name='add_product'),
     # path('logout/',views.logoutUser,name='logout'),

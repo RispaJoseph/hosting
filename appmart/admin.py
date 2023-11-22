@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.conf import settings
 from account.models import User
 from django.contrib.auth import get_user_model
+from django.utils.safestring import mark_safe
+
 
 from appmart.models import Category, Product, ProductImages
 # Register your models here.
@@ -18,5 +20,8 @@ class ProductAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
   list_display = ['title', 'category_image']
   
+  def display_category_image(self, obj):
+        return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" />')
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)

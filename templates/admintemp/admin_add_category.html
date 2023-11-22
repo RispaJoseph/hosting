@@ -8,9 +8,9 @@
         <div class="col-9">
             <div class="content-header">
                 <h2 class="content-title">Add New Category</h2>
-                <div>
+                {% comment %} <div>
                     <button class="btn btn-md rounded font-sm hover-up">Publich</button>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
         <div class="col-lg-6">
@@ -20,7 +20,7 @@
                 </div>
                 <div class="card-body">
                     <!-- Include Django form tags -->
-                    <form method="post" enctypa="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% comment %} {{ form.as_p }} <!-- Display form fields --> {% endcomment %}
                         <div class="mb-4">
