@@ -19,7 +19,7 @@ urlpatterns = [
     path('admin_update_product/<str:pid>/', views.admin_update_product, name='admin_update_product'),
     path('admin_category_edit/<str:cid>/',views.admin_category_edit,name="admin_category_edit"),
     path('delete_category/<str:cid>',views.delete_category,name='delete_category'),
-    # path('available_category/<str:cid>',views.available_category,name='available_category'),
+    path('available_category/<str:cid>',views.available_category,name='available_category'),
     
     # path('add_product/',views.add_product,name='add_product'),
     # path('logout/',views.logoutUser,name='logout'),

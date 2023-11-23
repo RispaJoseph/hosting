@@ -44,6 +44,12 @@
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="detail-info">
+                                        {% comment %} <h5 class=></h5> {% endcomment %}
+                                        
+
+                                        {% comment %} alerttttt..... {% endcomment %}
+                                        <input type="text" value="{{product.id}}" class="product-id" name="" id="">
+                                        <input type="text" value="{{product.title}}" class="product-title" name="" id="">
                                         <h2 class="title-detail">{{product.title}}</h2>
                                         <div class="product-detail-rating">
                                             <!-- <div class="pro-details-brand">
@@ -59,8 +65,11 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand">{{product.price}}</span></ins>
-                                                <ins><span class="old-price font-md ml-15">{{product.old_price}}</span></ins>
+                                                <ins><span class="text-brand" id="current-product-price">{{product.price}}</span></ins>
+
+                                                {% comment %} alerttttt..... {% endcomment %}
+                                                {% comment %} <input type="text" value="{{product.price}}" class="product-price" name="" id=""> {% endcomment %}
+                                                <ins><span class="old-price font-md ml-15" name="product-price">{{product.old_price}}</span></ins>
                                                 <span class="save-price  font-md color3 ml-15">-{{product.get_percentage|floatformat:0}}%</span>
                                             </div>
                                         </div>
@@ -83,16 +92,18 @@
                                         
                                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                         <div class="detail-extralink">
-                                            <div class="detail-qty border radius">
+                                            {% comment %} <div class="detail-qty border radius">
                                                 <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div>
+                                            </div> {% endcomment %}
+                                            <input type="number" value="1" name="product-quantity" id="product-quantity" class="w-25 mb-10">
+                                            
                                             <div class="product-extra-link2">
                                               {% if product.stock_count == '0' %}
                                               <button type="submit" class="button button-add-to-cart" disabled>Out Of Stock</button>
                                                 {% else %}
-                                               <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                               <button type="submit" class="button button-add-to-cart" id="add-to-cart-btn">Add to cart</button>
                                                {% endif %}
 
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
@@ -418,7 +429,7 @@
                                                         </span>
                                                     </div>
                                                     <div class="product-price">
-                                                        <span>{{prod.price}} </span>
+                                                        <span class="current-product-price">{{prod.price}} </span>
                                                         <span class="old-price">{{prod.old_price}}</span>
                                                     </div>
                                                 </div>

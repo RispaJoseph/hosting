@@ -142,19 +142,19 @@ def delete_category(request,cid):
     return redirect('appadmin:admin_category_list')
 
 
-# def available_category(request,cid):
-#     if not request.user.is_authenticated:
-#         return HttpResponse("Unauthorized", status=401)
+def available_category(request,cid):
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
     
-#     category = get_object_or_404(Category, cid=cid)
+    category = get_object_or_404(Category, cid=cid)
     
-#     if category.is_blocked:
-#         category.is_blocked=False
+    if category.is_blocked:
+        category.is_blocked=False
        
-#     else:
-#         category.is_blocked=True
-#     category.save()
-#     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        category.is_blocked=True
+    category.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 

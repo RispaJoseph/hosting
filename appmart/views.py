@@ -64,3 +64,8 @@ def product_detail(request,pid):
     }
     return render (request,'mart/product_detail.html',context)
 
+
+
+def add_to_cart(request):
+    return render(request,'mart/user_cart.html')
+
