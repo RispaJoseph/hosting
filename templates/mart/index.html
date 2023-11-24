@@ -117,11 +117,18 @@
                                             </span>
                                         </div>
                                         <div class="product-price">
-                                            <span>{{p.price}} </span>
+                                            <span class="current-product-price{{ p.pid }}">{{p.price}} </span>
                                             <span class="old-price">{{p.old_price}}</span>
                                         </div>
-                                        <div class="product-action-1 show">
-                                            <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                                        <div class="product-action-1 show" class="add-cart">
+                                            <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.pid }}">
+                                            <input type="hidden" class="product-pid-{{ p.pid }}" value="{{ p.pid }}">
+                                            <input type="hidden" class="product-image-{{ p.pid }}" value="{{ p.image.url }}">
+                                            <input type="hidden" class="product-id-{{ id }}" value="{{ p.id }}">
+                                            <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.title }}">
+                                            {% comment %} <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a> {% endcomment %}
+                                            <button aria-label="Add To Cartt"  class="add add-to-cart-btn" data-index="{{ p.id }}" id="add-to-cart-btn" style="border: none;" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+
                                         </div>
                                     </div>
                                 </div>
@@ -163,8 +170,8 @@
                                             </span>
                                         </div>
                                         <div class="product-price">
-                                            <span>$238.85 </span>
-                                            <span class="old-price">$245.8</span>
+                                            <span>$</span><span class="current-product-price{{ p.id }}">{{ p.price}}</span>
+                                            <span class="old-price">${{p.old_price}}</span>
                                         </div>
                                         <div class="product-action-1 show">
                                             <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
@@ -205,7 +212,7 @@
                                             <span class="old-price">$255.8</span>
                                         </div>
                                         <div class="product-action-1 show">
-                                            <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                                            <a aria-label="Add To Cartt" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
                                         </div>
                                     </div>
                                 </div>
