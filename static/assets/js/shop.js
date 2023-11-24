@@ -114,34 +114,19 @@
 })(jQuery);
 
 // // Add to cart functionality
-// $("#add-to-cart-btn").on("click", function () {
-//   // let quantity = $("input[name='product-quantity']").val();
-//   let quantity = $("#product-quantity").val();
-//   let product_title = $(".product-title").val();
-//   let product_id = $(".product-id").val();
-//   let product_price = $("#current-product-price").text();
-//   let this_val = $(this);
+$("#add-to-cart-btn").on("click", function () {
+  // let quantity = $("input[name='product-quantity']").val();
+  let quantity = $("#product-quantity").val();
+  let product_title = $(".product-title").val();
+  let product_id = $(".product-id").val();
+  let product_price = $("#current-product-price").text();
+  let this_val = $(this);
 
-//   console.log("Quantity:", quantity);
-//   console.log("Title:", product_title);
-//   console.log("Price:", product_price);
-//   console.log("ID:", product_id);
-//   console.log("Current Element :", this_val);
-
-
-$(".add-to-cart-btn").on("click", function () {
-    let $this = $(this); // Reference to the clicked button
-  
-    let quantity = $this.siblings("#product-quantity").val();
-    let product_title = $this.siblings(`.product-title-${$this.data("index")}`).val();
-    let product_id = $this.siblings(`.product-id-${$this.data("index")}`).val();
-    let product_price = $("#current-product-price").text();
-  
-    console.log("Quantity:", quantity);
-    console.log("Title:", product_title);
-    console.log("Price:", product_price);
-    console.log("ID:", product_id);
-    console.log("Current Element :", $this);
+  console.log("Quantity:", quantity);
+  console.log("Title:", product_title);
+  console.log("Price:", product_price);
+  console.log("ID:", product_id);
+  console.log("Current Element :", this_val);
 
   // $.ajax({
   //     url: '/add_to_cart',
