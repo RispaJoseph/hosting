@@ -98,8 +98,8 @@
                                             </a>
                                         </div>
                                         <div class="product-action-1">
-                                            <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
-                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            {% comment %} <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a> {% endcomment %}
+                                            {% comment %} <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a> {% endcomment %}
                                             {% comment %} <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> {% endcomment %}
                                         </div>
                                         <div class="product-badges product-badges-position product-badges-mrg">
@@ -110,7 +110,7 @@
                                         <div class="product-category">
                                             <a href="shop-grid-right.html">{{p.category}}</a>
                                         </div>
-                                        <h2><a href="shop-product-right.html">{{p.title}}</a></h2>
+                                        <h2><a href="{% url 'appmart:product-detail' p.pid %}">{{p.title}}</a></h2>
                                         <div class="rating-result" title="90%">
                                             <span>
                                                 <span>90%</span>
@@ -129,9 +129,9 @@
                                             {% comment %} <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a> {% endcomment %}
                                             {% comment %} <button aria-label="Add To Cartt"  id="add-to-cart-btn" class="add-to-cart-btn" data-index="{{ p.id }}"  style="border: none;" href="#"><i class="fi-rs-shopping-bag-add"></i></a> {% endcomment %}
 
-                                                <button aria-label="Add To Cart" id="add-to-cart-btn" class="add-to-cart-btn" data-index="{{ p.id }}" style="border: none;">
+                                                {% comment %} <button aria-label="Add To Cart" id="add-to-cart-btn" class="add-to-cart-btn" data-index="{{ p.id }}" style="border: none;">
                                                     <i class="fi-rs-shopping-bag-add"></i>
-                                                </button>
+                                                </button> {% endcomment %}
                                                 
 
                                                
@@ -238,12 +238,12 @@
                                         <img class="hover-img" src="{{l.image.url}}" alt="">
                                     </a>
                                 </div>
-                                <div class="product-action-1">
-                                    <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                                {% comment %} <div class="product-action-1"> {% endcomment %}
+                                    {% comment %} <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"> {% endcomment %}
 <i class="fi-rs-eye"></i></a>
-                                    <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html" tabindex="0"><i class="fi-rs-heart"></i></a>
+                                    {% comment %} <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html" tabindex="0"><i class="fi-rs-heart"></i></a> {% endcomment %}
                                     {% comment %} <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a> {% endcomment %}
-                                </div>
+                                {% comment %} </div> {% endcomment %}
                                 <div class="product-badges product-badges-position product-badges-mrg">
                                     <span class="hot">-{{l.get_percentage|floatformat:0}}%</span>
                                 </div>

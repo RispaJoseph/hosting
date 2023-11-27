@@ -124,19 +124,30 @@ $("#add-to-cart-btn").on("click", function ()
   let quantity = $("#product-quantity").val();
   let product_title = $(".product-title").val();
   let product_id = $(".product-id").val();
-  let product_price = $("#current-product-price").text();
+  let product_price = $("#current-product-price").val();
+  // let product_image = $(".product-image-slider").val();
+  // let product_pid = $(".product-id").val();
+
+  let product_image = $(".product-image-sliderr img:first").attr("src");
+  let product_pid = $(".product-image-sliderr figure:first").data("pid");
+
   let this_val = $(this);
+
 
   console.log("Quantity:", quantity);
   console.log("Title:", product_title);
   console.log("Price:", product_price);
   console.log("ID:", product_id);
+  console.log("PID:",product_pid);
+  console.log("Image:",product_image);
   console.log("Current Element :", this_val);
 
   $.ajax({
     url: "/add_to_cart/",
     data: {
       id: product_id,
+      pid: product_pid,
+      image: product_image,
       qty: quantity,
       title: product_title,
       price: product_price,

@@ -275,7 +275,9 @@
                               </a>
                           </div>
                           <div class="header-action-icon-2">
-                              <a class="mini-cart-icon" href="shop-cart.html">
+                              <a class="mini-
+                              
+                              -icon" href="{% url 'appmart:shop_cart_view' %}">
                                   <img alt="Evara" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}">
                                   <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length}}</span>
                               </a>
