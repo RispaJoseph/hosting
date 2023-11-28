@@ -48,8 +48,11 @@
                                         
 
                                         {% comment %} alerttttt..... {% endcomment %}
-                                        <input type="text" value="{{product.id}}" class="product-id" name="" id="">
-                                        <input type="text" value="{{product.title}}" class="product-title" name="" id="">
+                                        <input type="hidden" value="{{product.pid}}" class="product-pid" name="" id="">
+                                        <input type="hidden" value="{{product.id}}" class="product-id" name="" id="">
+                                        <input type="hidden" value="{{product.title}}" class="product-title" name="" id="">
+                                        <input type="hidden" value="{{product.price}}" class="product-price" name="" id="">
+
                                         <h2 class="title-detail">{{product.title}}</h2>
                                         <div class="product-detail-rating">
                                             <!-- <div class="pro-details-brand">
@@ -65,7 +68,7 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand" id="current-product-price">{{product.price}}</span></ins>
+                                                <ins><span class="current-product-price1" id="current-product-price">{{product.price}}</span></ins>
 
                                                 {% comment %} alerttttt..... {% endcomment %}
                                                 {% comment %} <input type="text" value="{{product.price}}" class="product-price" name="" id=""> {% endcomment %}
@@ -92,11 +95,11 @@
                                         
                                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                         <div class="detail-extralink">
-                                            {% comment %} <div class="detail-qty border radius">
+                                            <div class="detail-qty border radius">
                                                 <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div> {% endcomment %}
+                                            </div> 
                                             <input type="number" value="1" name="product-quantity" id="product-quantity" class="w-25 mb-10">
                                             
                                             <div class="product-extra-link2">

@@ -124,12 +124,16 @@ $("#add-to-cart-btn").on("click", function ()
   let quantity = $("#product-quantity").val();
   let product_title = $(".product-title").val();
   let product_id = $(".product-id").val();
-  let product_price = $("#current-product-price").val();
+  let product_price = $(".current-product-price1").text();
+
+  // let product_price = $(".product-price").text();
+  // console.log("Price:", product_price);
   // let product_image = $(".product-image-slider").val();
   // let product_pid = $(".product-id").val();
 
   let product_image = $(".product-image-sliderr img:first").attr("src");
-  let product_pid = $(".product-image-sliderr figure:first").data("pid");
+  // let product_pid = $(".product-image-sliderr figure:first").data("pid");
+  let product_pid = $(".product-pid").val();
 
   let this_val = $(this);
 

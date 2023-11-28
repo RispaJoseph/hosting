@@ -156,6 +156,8 @@ def add_to_cart(request):
         'pid': request.GET.get('pid'),
     }
 
+
+
     if product_id in cart_data:
         # If the product already exists in the cart, update its quantity
         cart_data[product_id]['qty'] += cart_product['qty']
@@ -170,51 +172,6 @@ def add_to_cart(request):
 
 
 
-# def shop_cart_view(request):
-#     cart_total_amount = 0
-#     if 'cart_data_obj' in request.session:
-#         for p_id, item in request.session['cart_data_obj'].items():
-#             # cart_total_amount += int(item['qty']) + float(item['price'])
-
-#             cart_total_amount += int(item['qty']) * float(item['price'])
-
-#         return render(request,"mart/shop-cart.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
-#     else:
-#         messages.warning(request, "Your cart is empty")
-#         return redirect("appmart:index")
-
-
-
-
-# cart_total_amount = 0
-# if 'cart_data_obj' in request.session:
-#     for p_id, item in request.session['cart_data_obj'].items():
-#         quantity = int(item.get('qty', 0))  # Get quantity, default to 0 if not present
-#         price = item.get('price', '')      # Get price, default to empty string if not present
-
-#         # Check if price is not an empty string before converting to float
-#         if price and price.strip():  # Check if price is non-empty and not just whitespace
-#             try:
-#                 float_price = float(price)
-#                 cart_total_amount += quantity * float_price
-#             except ValueError:
-#                 # Handle the case where the price is not convertible to a float
-#                 # Log the error, skip the item, or handle it according to your app's logic
-#                 pass
-#         else:
-#             # Handle the case where the price is empty or not present
-#             # Log the error, skip the item, or handle it according to your app's logic
-#             pass
-
-#     return render(request, "mart/shop-cart.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount})
-# else:
-#     messages.warning(request, "Your cart is empty")
-#     return redirect("appmart:index")
-
-
-
-
-
 
 
 def shop_cart_view(request):
@@ -224,7 +181,7 @@ def shop_cart_view(request):
         for p_id, item in request.session['cart_data_obj'].items():
             quantity = int(item.get('qty', 0))  # Default quantity to 0 if not present
             price = item.get('price', '')
-            print (item)
+            
             # products = Product.objects.get(pid = p_id)
                   # Default price to empty string if not present
 
@@ -237,11 +194,6 @@ def shop_cart_view(request):
                 # Log the error, skip the item, or handle it according to your app's logic
                 pass
 
-        
-    #     context = {
-    #     "products": products,
-    #     "product_id" : pid,
-    # }
         return render(request, "mart/shop-cart.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount})
     else:
         messages.warning(request, "Your cart is empty")
