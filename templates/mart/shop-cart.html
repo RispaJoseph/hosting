@@ -1,7 +1,7 @@
 ﻿{% extends 'partial/base.html' %}
    {% load static %}
    {% block content %}    
-    <main class="main">
+    <main class="main" id="cart-list">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
@@ -24,6 +24,7 @@
                                         <th scope="col">Price</th>
                                         <th scope="col" class="text-center">Quantity</th>
                                         <th scope="col">Subtotal</th>
+                                        <th scope="col">Update</th>
                                         <th scope="col">Remove</th>
                                     </tr>
                                 </thead>
@@ -47,13 +48,15 @@
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div> -->
                                             <div class="mr-15">
-                                            <input type="number" placeholder="qty" class="w-25" value="{{item.qty}}" name="" id="" style="border: 1px solid ;">
+                                            <input type="number" placeholder="qty" class="w-25 product-qty-{{ product_id }}" value="{{item.qty}}" name="" id="" style="border: 1px solid ;">
                                             </div>
                                         </td>
                                         <td class="text-right" data-title="Cart">
                                             <span>${% widthratio item.price 1  item.qty %} </span>
                                         </td>
-                                        <td class="action" data-title="Remove"><a href="#" class="text-muted"><i class="fi-rs-trash"></i></a></td>
+                                        <td class="action" data-title="Refresh"><button style="border: none; background: none;" class="update-product" data-product="{{ product_id }}">🔄</button></td>
+
+                                        <td class="action" data-title="Remove"><button style="border: none; background: none;" class="delete-product" data-product="{{ product_id }}"><i class="fi-rs-trash"></i></button></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -151,7 +154,9 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    {% if totalcartitems %}
                                     <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
