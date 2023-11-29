@@ -102,5 +102,3 @@ def logoutUser(request):
     messages.success(request,f'You logged out')
     return redirect('appmart:index') 
 
-# def index(request):
-#     return render(request, 'mart/index.html')

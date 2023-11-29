@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin, Group, Permission, AbstractUser
+from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin, Group, Permission, AbstractUser, User
 from django.db.models import Q
  
 
@@ -95,3 +95,15 @@ class Userform(models.Model):
 
   def __str__(self):
     return self.username
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="image")
+    full_name = models.CharField(max_length=200, null=True, blank=True)
+    bio = models.CharField(max_length=200, null=True, blank=True)
+    phone = models.CharField(max_length=200)
+    verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.full_name

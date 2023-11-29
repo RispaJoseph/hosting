@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from appmart.models import Product, Category, ProductImages
+from account import models, forms
 from django.contrib import messages
 from django.template.loader import render_to_string 
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
 
 # Create your views here.
 
 def index(request):
-    products = Product.objects.filter(featured = True, status = True)
+    category_block = Category.objects.filter(is_blocked=True)
+    products = Product.objects.filter(featured = True, status = True).exclude(category__in=category_block)
     latest = Product.objects.all().order_by("-id")[:10]
-    category = Category.objects.all()
+    category = Category.objects.filter(is_blocked=False)
 
     
     context = {
@@ -38,8 +42,9 @@ def category_product_list_view(request, cid):
     return render(request, "mart/category_product_list.html",context)
 
 def product_all_list(request):
-    products = Product.objects.filter(status = True)
-    category = Category.objects.all()
+    category_block = Category.objects.filter(is_blocked=True)
+    products = Product.objects.filter(status = True).exclude(category__in=category_block)
+    category = Category.objects.filter(is_blocked=True)
 
     context = {
         "products":products,
@@ -263,3 +268,22 @@ def checkout_view(request):
             cart_total_amount += int(item['qty']) * float(item['price'])
 
         return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount})
+
+
+@login_required(login_url='account:login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect('login') 
+    else:
+        return render(request, 'mart/dashboard.html')
+
+    user_profile = Profile.objects.get(user=request.user)
+    print("user profile is:******************", user_profile)
+
+    context = {
+        "profile": profile,
+    }
+
+def cod(request):
+    return render(request,'mart/cash_on_delivery.html')
