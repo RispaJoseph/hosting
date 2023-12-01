@@ -22,9 +22,11 @@ def sign_up(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password1')
+            
             request.session["username"] = username
             request.session["email"] = email
             request.session["password"] = password
+            
 
             send_otp(request)
             return render(request,'user/otp.html',{"email":email})

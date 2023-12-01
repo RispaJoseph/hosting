@@ -1,13 +1,28 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from appmart.models import Product, Category, ProductImages
-from account import models, forms
+from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
+from django.urls import reverse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from paypal.standard.forms import PayPalPaymentsForm
+from django.utils import timezone
 # Create your views here.
+
+
+
+
+# def date_time(request):
+#     current_date = timezone.now().date()  # Assign the current date to 'current_date'
+#     return render(request, 'payment_completed.html', {'current_date': current_date})
+
+
+
 
 def index(request):
     category_block = Category.objects.filter(is_blocked=True)
@@ -262,12 +277,43 @@ def update_cart(request):
 
 
 def checkout_view(request):
+    host = request.get_host()
+    paypal_dict = {
+        'business' : settings.PAYPAL_RECEIVER_EMAIL,
+        'amount' : '200',
+        'item_name' : "Order-Item-No-5",
+        'invoice' : "INVOICE_NO-5",
+        'currency_code' : "USD",
+        'notify_url' : 'http://{}{}'.format(host, reverse("appmart:paypal-ipn")),
+        'return_url' : 'http://{}{}'.format(host, reverse("appmart:payment-completed")),
+        'cancel_url' : 'http://{}{}'.format(host, reverse("appmart:payment-failed")),
+
+    }
+    paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
+
     cart_total_amount = 0
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
 
-        return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount})
+        return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': 'paypal_payment_button'})
+
+
+# @login_required(login_url='account:login')
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def dashboard(request):
+#     if not request.user.is_authenticated:
+#         return redirect('login') 
+#     else:
+#         return render(request, 'mart/dashboard.html')
+
+#     profile = Profile.objects.get(user=request.user)
+#     print(request.user)
+
+#     context = {
+#         "profile": profile,
+#     }
+
 
 
 @login_required(login_url='account:login')
@@ -276,14 +322,34 @@ def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('login') 
     else:
-        return render(request, 'mart/dashboard.html')
+        # user_profile = Profile.objects.get(user=request.user)
+        # print('user_profile is:####',user_profile)
+        
+        context = {
+            # "user_profile": user_profile,
+        }
+        
+        return render(request, 'mart/dashboard.html', context)
 
-    user_profile = Profile.objects.get(user=request.user)
-    print("user profile is:******************", user_profile)
 
-    context = {
-        "profile": profile,
-    }
+
+
+
 
 def cod(request):
     return render(request,'mart/cash_on_delivery.html')
+
+@login_required
+def payment_completed_view(request):
+    cart_total_amount = 0
+    current_time = timezone.now().date()
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['qty']) * float(item['price'])
+    return render(request, 'mart/payment_completed.html', {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'current_time': current_time, })
+
+                                                           
+
+
+def payment_failed_view(request):
+    return render(request, 'mart/payment_failed.html') 

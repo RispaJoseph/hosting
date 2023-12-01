@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from appmart import views
 
 app_name = "appmart"
@@ -17,5 +17,11 @@ urlpatterns = [
 
     path('dashboard/',views.dashboard,name='dashboard'),
     path('cod/',views.cod,name='cod'),
+
+    path('paypal/', include('paypal.standard.ipn.urls')),
+    path('payment-completed/',views.payment_completed_view,name='payment-completed'),
+    path('payment-failed/',views.payment_failed_view,name='payment-failed'),
+
+    
 
 ]

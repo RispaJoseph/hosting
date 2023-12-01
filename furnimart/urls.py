@@ -24,6 +24,7 @@ urlpatterns = [
     path('user/',include('account.urls')),
     path('admin_user/',include('appadmin.urls')),
     path('',include('appmart.urls')),
+    path('paypal/', include('paypal.standard.ipn.urls')),
 ]
 
 

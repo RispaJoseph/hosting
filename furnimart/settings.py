@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'appmart',
     'shortuuid',
     'appadmin',
+
+    # Paypal Integration
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +158,8 @@ EMAIL_FROM='rizpahjoseph@gmail.com'
 EMAIL_HOST_USER='rizpahjoseph@gmail.com'
 EMAIL_HOST_PASSWORD='iszd evwz aykd hshg'
 EMAIL_PORT=587
+
+
+
+PAYPAL_RECEIVER_EMAIL = 'sb-ieumc27026530@business.example.com'   
+PAYPAL_TEST = True
