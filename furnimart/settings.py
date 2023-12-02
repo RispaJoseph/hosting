@@ -161,5 +161,5 @@ EMAIL_PORT=587
 
 
 
-PAYPAL_RECEIVER_EMAIL = 'sb-ieumc27026530@business.example.com'   
+PAYPAL_RECEIVER_EMAIL = 'sb-do47ii25895629@business.example.com'   
 PAYPAL_TEST = True
