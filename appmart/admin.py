@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 from account.models import User, Profile
+from appmart.models import CartOrder, CartOrderItems, Address
 from django.contrib.auth import get_user_model
 from django.utils.safestring import mark_safe
 
@@ -23,6 +24,20 @@ class CategoryAdmin(admin.ModelAdmin):
   def display_category_image(self, obj):
         return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" />')
 
+class CartOrderAdmin(admin.ModelAdmin):
+  list_editable = ['paid_status','product_status']
+  list_display = ['user', 'price', 'paid_status', 'order_date', 'product_status']
+
+
+class CartOrderItemsAdmin(admin.ModelAdmin):
+  list_display = ['order', 'invoice_no', 'item', 'image', 'qty', 'price', 'total']
+
+
+class AddressAdmin(admin.ModelAdmin):
+  list_display = ['user', 'address', 'status']
+
+
+
 class ProfileAdmin(admin.ModelAdmin):
   list_display = ['full_name','bio','phone','image']
 
@@ -30,4 +45,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(CartOrder, CartOrderAdmin)
+admin.site.register(CartOrderItems, CartOrderItemsAdmin)
+admin.site.register(Address, AddressAdmin)
 admin.site.register(Profile, ProfileAdmin)

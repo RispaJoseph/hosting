@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from appmart.models import Product, Category, ProductImages
+from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderItems, Address
 from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
@@ -276,13 +276,50 @@ def update_cart(request):
     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
 
 
+
+@login_required
 def checkout_view(request):
+
+    cart_total_amount = 0
+    total_amount = 0
+
+    #checking if cart_data_obj session exists
+    if 'cart_data_obj' in request.session:
+
+
+        # getting total amount for Paypal amount
+        for p_id, item in request.session['cart_data_obj'].items():
+            total_amount += int(item['qty']) * float(item['price'])
+
+        # create order objects
+        order = CartOrder.objects.create(
+            user = request.user,
+            price = total_amount
+        )
+
+        # Gettting total amount for the cart
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['qty']) * float(item['price'])
+
+            cart_order_products = CartOrderItems.objects.create(
+                order = order,
+                invoice_no = "INVOICE_NO-" + str(order.id),
+                item = item['title'],
+                image = item['image'],
+                qty = item['qty'],
+                price = item['price'],
+                total = float(item['qty']) * float(item['price'])
+                
+                
+            )
+
+
     host = request.get_host()
     paypal_dict = {
         'business' : settings.PAYPAL_RECEIVER_EMAIL,
-        'amount' : '200',
-        'item_name' : "Order-Item-No-5",
-        'invoice' : "INVOICE_NO-5",
+        'amount' : 'cart_total_amount',
+        'item_name' : "Order-Item-No-" + str(order.id),
+        'invoice' : "INVOICE_NO-" + str(order.id),
         'currency_code' : "USD",
         'notify_url' : 'http://{}{}'.format(host, reverse("appmart:paypal-ipn")),
         'return_url' : 'http://{}{}'.format(host, reverse("appmart:payment-completed")),
@@ -291,12 +328,12 @@ def checkout_view(request):
     }
     paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
 
-    cart_total_amount = 0
-    if 'cart_data_obj' in request.session:
-        for p_id, item in request.session['cart_data_obj'].items():
-            cart_total_amount += int(item['qty']) * float(item['price'])
+    # cart_total_amount = 0
+    # if 'cart_data_obj' in request.session:
+    #     for p_id, item in request.session['cart_data_obj'].items():
+    #         cart_total_amount += int(item['qty']) * float(item['price'])
 
-        return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button})
+    return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button})
 
 
 # @login_required(login_url='account:login')
