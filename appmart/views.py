@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderItems, Address
+from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address
 from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
@@ -301,7 +301,7 @@ def checkout_view(request):
         for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
 
-            cart_order_products = CartOrderItems.objects.create(
+            cart_order_products = CartOrderProducts.objects.create(
                 order = order,
                 invoice_no = "INVOICE_NO-" + str(order.id),
                 item = item['title'],
@@ -317,7 +317,7 @@ def checkout_view(request):
     host = request.get_host()
     paypal_dict = {
         'business' : settings.PAYPAL_RECEIVER_EMAIL,
-        'amount' : 'cart_total_amount',
+        'amount' : cart_total_amount,
         'item_name' : "Order-Item-No-" + str(order.id),
         'invoice' : "INVOICE_NO-" + str(order.id),
         'currency_code' : "USD",
