@@ -396,7 +396,7 @@ def block_unblock_user(request,user_id):
 
 
 def cart_order_list(request):
-    orders = CartOrder.objects.all()
+    orders = CartOrder.objects.all().order_by("-order_date")
     print(orders)
     context = {
         "orders" : orders

@@ -193,7 +193,7 @@
                   <div class="header-info">
                       <ul>
                           <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
-                          <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
+                          <!-- <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li> -->
                       </ul>
                   </div>
               </div>
@@ -201,9 +201,9 @@
                   <div class="text-center">
                       <div id="news-flash" class="d-inline-block">
                           <ul>
-                              <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
+                              <li>Get great goods up to 50% off <a href="shop-grid-right.html">View details</a></li>
                               <li>Supper Value Deals - Save more with coupons</li>
-                              <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
+                              <li>Trendy Chairs, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
                           </ul>
                       </div>
                   </div>
@@ -219,6 +219,10 @@
                                   <li><a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}" alt="">Pусский</a></li>
                               </ul>
                           </li> {% endcomment %}
+                          <span style="padding-left: 30px;"><a class="" href="#" id="dropdownAccount">
+                            Hello {{ request.user.first_name }}
+                        </a></span>
+                        
                           {% comment %} <li><i class="fi-rs-user"></i><a href="page-login-register.html">Log In / Sign Up</a></li> {% endcomment %}
                           {% comment %} <li><i class="fi-rs-user"></i><a href="{%url 'account:logout' %}">Sign Out</a></li> {% endcomment %}
 
@@ -263,18 +267,18 @@
                               <option>Mother & Kids</option> -->
                              
                           </select>
-                          <input type="text"  placeholder="Search for itemss..." name="q">
+                          <input type="text"  placeholder="Search for items..." name="q">
                           <button class="fas fa-search" type="submit"></button>
                       </form>
                   </div>
                   <div class="header-action-right">
                       <div class="header-action-2">
-                          <div class="header-action-icon-2">
+                          <!-- <div class="header-action-icon-2">
                               <a href="shop-wishlist.html">
                                   <img class="svgInject" alt="Evara" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}">
                                   <span class="pro-count blue"></span>
                               </a>
-                          </div>
+                          </div> -->
                           <div class="header-action-icon-2">
                               <a class="mini-
                               
@@ -393,9 +397,9 @@
                       </nav>
                   </div>
               </div>
-              <div class="hotline d-none d-lg-block">
+              <!-- <div class="hotline d-none d-lg-block">
                   <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
-              </div>
+              </div> -->
               <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
               <div class="header-action-right d-block d-lg-none">
                   <div class="header-action-2">
@@ -614,9 +618,9 @@
               <!-- mobile menu end -->
           </div>
           <div class="mobile-header-info-wrap mobile-header-border">
-              <div class="single-mobile-header-info mt-30">
+              <!-- <div class="single-mobile-header-info mt-30">
                   <a  href="page-contact.html"> Our location </a>
-              </div>
+              </div> -->
               <div class="single-mobile-header-info">
                   <a href="page-login-register.html">Log In / Sign Up </a>
               </div>
