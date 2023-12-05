@@ -7,7 +7,7 @@
   
   {% load static%}
   <meta charset="utf-8">
-  <title>Perfect</title>
+  <title>FURNIMART</title>
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -247,8 +247,8 @@
               </div>
               <div class="header-right">
                   <div class="search-style-2">
-                      <form action="#">
-                          <select class="select-active">
+                      <form action="{% url 'appmart:search_view' %}" method="GET">
+                          <select class="select-active"> 
                             
                               <option></option>
                               <!-- <option>Women's</option>
@@ -263,7 +263,8 @@
                               <option>Mother & Kids</option> -->
                              
                           </select>
-                          <input type="text" placeholder="Search for items...">
+                          <input type="text"  placeholder="Search for itemss..." name="q">
+                          <button class="fas fa-search" type="submit"></button>
                       </form>
                   </div>
                   <div class="header-action-right">
@@ -494,9 +495,9 @@
       </div>
       <div class="mobile-header-content-area">
           <div class="mobile-search search-style-3 mobile-header-border">
-              <form action="#">
-                  <input type="text" placeholder="Search for items…">
-                  <button type="submit"><i class="fi-rs-search"></i></button>
+              <form action="{% url 'appmart:search_view' %}" method="GET">
+                  <input type="text" placeholder="Search for items…" name="q">
+                  <!-- <button class="fas fa-search" type="submit"></button> -->
               </form>
           </div>
           <div class="mobile-menu-wrap mobile-header-border">

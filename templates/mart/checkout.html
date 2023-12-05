@@ -723,7 +723,7 @@
                                             <p class="text-muted mt-5">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode. </p>
                                         </div>
                                     </div> -->
-                                    <div class="custome-radio">
+                                    <!-- <div class="custome-radio">
                                         <input class="form-check-input" required="" type="radio" name="payment_option" id="paypal" checked="">
                                         <label class="form-check-label" for="paypal" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Paypal</label>
                                         <div class="form-group collapse in" id="paypal">
@@ -737,15 +737,18 @@
                                         <div class="form-group collapse in" id="cod">
                                             <p class="text-muted mt-5">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
+                            <span style="display: flex;">
+                                <a href="{% url 'appmart:cod' %}" class="btn btn-fill-out btn-block mt-30">Cash On Delivery</a>
+                            
+                                <span class="display: flex; margin-bottom: 1rem;">
+                                    {{paypal_payment_button.render}}   
+                                </span>
+                            </span>
+                            
 
-                            <div class="w-50">
-                                {{paypal_payment_button.render}}   
-                            </div>
-
-                            <!-- <a href="{%url 'appmart:payment-completed' %}" class="btn btn-fill-out btn-block mt-30">Place Order</a> -->
                         </div>
                     </div>
                 </div>

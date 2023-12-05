@@ -21,6 +21,9 @@ urlpatterns = [
     path('paypal/', include('paypal.standard.ipn.urls')),
     path('payment-completed/',views.payment_completed_view,name='payment-completed'),
     path('payment-failed/',views.payment_failed_view,name='payment-failed'),
+    path('search_view/',views.search_view,name='search_view'),
+
+    # path('update-status/', views.update_status, name='update_status'),
 
     
 

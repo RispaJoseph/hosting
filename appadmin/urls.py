@@ -1,6 +1,7 @@
 from django.urls import path
 from appadmin import views
 
+
 app_name = "appadmin"
 urlpatterns = [
     # path('signup/',views.sign_up,name='signup'),
@@ -20,6 +21,10 @@ urlpatterns = [
     path('admin_category_edit/<str:cid>/',views.admin_category_edit,name="admin_category_edit"),
     path('delete_category/<str:cid>',views.delete_category,name='delete_category'),
     path('available_category/<str:cid>',views.available_category,name='available_category'),
+
+    
+    
+
     
     # path('add_product/',views.add_product,name='add_product'),
     # path('logout/',views.logoutUser,name='logout'),

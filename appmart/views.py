@@ -335,6 +335,8 @@ def checkout_view(request):
 
     return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button})
 
+    
+
 
 # @login_required(login_url='account:login')
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -369,6 +371,15 @@ def dashboard(request):
         return render(request, 'mart/dashboard.html', context)
 
 
+def search_view(request):
+    query = request.GET.get("q")
+
+    products = Product.objects.filter(title__icontains=query).order_by("-date")
+    context = {
+        "products" : products,
+        "query" : query
+    }
+    return render(request, 'mart/search.html', context)
 
 
 

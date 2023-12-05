@@ -237,6 +237,9 @@ def admin_add_product(request):
 
 
 
+
+
+
 # def admin_update_product(request, pid):
 #     if not request.user.is_authenticated:
 #         return HttpResponse("Unauthorized", status=401)
@@ -391,3 +394,18 @@ def block_unblock_user(request,user_id):
   
 
 
+def cart_order_list(request):
+    orders = CartOrder.objects.all()
+    print(orders)
+    context = {
+        "orders" : orders
+    }
+    return render(request,'admintemp/cart_order.html', context)
+
+
+# def admin_products_list(request):
+#      products = Product.objects.all()
+#      context = {
+#           "products":products
+#      }
+#      return render(request,'admintemp/admin_products_list.html', context)
