@@ -4,7 +4,7 @@
     <main class="main">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
-                <div class="breadcrumb">
+                <div class="breadcrumb"
                     <a href="index.html" rel="nofollow">Home</a>
                     <span></span> Shop
                     <span></span> {{query}}
@@ -17,7 +17,11 @@
                     
                     <div class="col-lg-12">
                       <div class="single-header mb-50">
-                        <h1 class="font-xxl text-brand">{{query}}</h1>
+                        {% if query %}
+                        <h3 class="font-xxl text-brand">{{query}}</h3>
+                        {% else %}
+                        <h3 class="font-xxl text-brand">No Searched Item</h3>
+                        {% endif %}
                         <div class="shop-product-fillter">
                           <div class="totall-product">
                               <p> We found <strong class="text-brand">{{products.count}}</strong> item{{products.count|pluralize}} for you!</p>

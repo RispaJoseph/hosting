@@ -7,7 +7,8 @@ from account.models import User
 STATUS_CHOICE = (
   ("processing", "Processing"),
   ("shipped", "Shipped"),
-  ("delivered", "Delivered")
+  ("delivered", "Delivered"),
+  ("Cancel", "Cancel")
 ) 
 
 RATING = (

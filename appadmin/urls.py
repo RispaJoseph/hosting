@@ -22,7 +22,11 @@ urlpatterns = [
     path('delete_category/<str:cid>',views.delete_category,name='delete_category'),
     path('available_category/<str:cid>',views.available_category,name='available_category'),
 
-    
+    path('cart_order_list',views.cart_order_list,name='cart_order_list'),
+    # path('delete_cart_order/<int:order_id>/',views.delete_cart_order,name='delete_cart_order'),
+    path('admin_user/delete_cart_order/<int:order_id>/', views.delete_cart_order, name='delete_cart_order'),
+
+
     
 
     

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse , get_object_or_404, HttpResponseRedirect
-from django.urls import reverse
+from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate,login,logout
 from appadmin.forms import CreateProductForm, CategoryForm
@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from appmart.models import *
+
 
 # Create your views here.
 
@@ -409,3 +410,47 @@ def cart_order_list(request):
 #           "products":products
 #      }
 #      return render(request,'admintemp/admin_products_list.html', context)
+
+
+
+
+
+
+# def delete_order(request, order_id):
+#     if request.method == 'POST':
+#         order = get_object_or_404(CartOrder, id=order_id)
+        
+#         # Check if the selected status is 'Cancel'
+#         if order.product_status == 'Cancel':
+#             order.delete()
+#             return JsonResponse({'message': 'Order canceled and deleted successfully.'})
+#         else:
+#             return JsonResponse({'message': 'Order status is not "Cancel".'}, status=400)
+#     else:
+#         return JsonResponse({'message': 'Invalid request method.'}, status=405)
+
+
+
+
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def delete_cart_order(request,pid):
+#     if not request.user.is_authenticated:
+#         return redirect('appadmin:admin_login')
+#     try:
+#         order = CartOrder.objects.get(id=order_id)
+#         order.delete()
+#         return redirect('appadmin:cart_order_list')
+#     except CartOrder.DoesNotExist:
+#         return HttpResponse("Order not found", status=404)
+
+
+def delete_cart_order(request, order_id):
+    if not request.user.is_authenticated:
+        return redirect('appadmin:admin_login')
+    
+    try:
+        order = CartOrder.objects.get(id=order_id)
+        order.delete()
+        return redirect('appadmin:cart_order_list')
+    except CartOrder.DoesNotExist:
+        return HttpResponse("Order not found", status=404)

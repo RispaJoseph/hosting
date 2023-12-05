@@ -58,10 +58,17 @@
                                     <td>{{ order.id }}</td>
                                     <td>{{ order.user}}</td>
                                     <td>{{ order.price}}</td>
-                                    <td>
+                                    <!-- <td>
                                         <input type="checkbox" style="border: 1rem;"  id="myCheckbox" name="myCheckbox" value="checkboxValue" {% if order.paid_status %}checked{% endif %} disabled>
                                         <label for="myCheckbox" class="custom-checkbox">{% if order.paid_status %}<i class="fas fa-check"></i>{% endif %}</label>
+                                    </td> -->
+
+                                    <td>
+                                        <input type="checkbox" style="border: 2px solid blue; background-color: lightblue; width: 20px; height: 20px;" id="myCheckbox" name="myCheckbox" value="checkboxValue" {% if order.paid_status %}checked{% endif %} disabled>
+                                        <label for="myCheckbox" class="custom-checkbox">{% if order.paid_status %}<i class="fas fa-check"></i>{% endif %}</label>
                                     </td>
+                                    
+                                    
                                     
                                     
 
@@ -79,6 +86,7 @@
                                                 <a class="dropdown-item" href="#">Processing</a>
                                                 <a class="dropdown-item text-warning" href="#">Shipped</a>
                                                 <a class="dropdown-item text-success" href="#">Delivered</a>
+                                                <a class="dropdown-item text-danger" href="{% url 'appadmin:delete_cart_order' order_id=order.id  %}">Cancel</a>
                                             </div>
                                         </div> <!-- dropdown //end -->
                                     </td>
