@@ -355,20 +355,45 @@ def checkout_view(request):
 
 
 
+# @login_required(login_url='account:login')
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def dashboard(request):
+#     if not request.user.is_authenticated:
+#         return redirect('login') 
+#     else:        
+#         return render(request, 'mart/dashboard.html')
+
+#     orders = CartOrder.objects.filter(user=request.user)
+#     context = {
+#         "orders" : orders,
+#     }
+#     return render(request, 'mart/dashboard.html', context)
+
+
 @login_required(login_url='account:login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     if not request.user.is_authenticated:
-        return redirect('login') 
+        return redirect('login')
     else:
-        # user_profile = Profile.objects.get(user=request.user)
-        # print('user_profile is:####',user_profile)
-        
+        orders = CartOrder.objects.filter(user=request.user).order_by("-id")
         context = {
-            # "user_profile": user_profile,
+            "orders": orders,
         }
-        
         return render(request, 'mart/dashboard.html', context)
+
+
+
+
+def order_details(request,id):
+    order = CartOrder.objects.get(user=request.user, id=id)
+    order_items = CartOrderProducts.objects.filter(order=order)
+    context = {
+            "order_items": order_items,
+        }
+    return render(request, 'mart/order-detail.html', context)
+
+
 
 
 def search_view(request):

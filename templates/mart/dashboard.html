@@ -20,7 +20,7 @@
                             <div class="dashboard-menu">
                                 <ul class="nav flex-column" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active show" id="dashboard-tab" data-bs-toggle="tab" href="{%url 'appmart:dashboard'%}" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                        <a class="nav-link active show" id="dashboard-tab"  href="{%url 'appmart:dashboard'%}" ><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link " id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="fi-rs-user mr-10"></i>Profile</a>
@@ -48,7 +48,7 @@
                                 <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5 class="mb-0">{{ profile.full_name }}</h5>
+                                            <h5 class="mb-0">Hello {{request.user.first_name}}</h5>
                                         </div>
                                         <div class="card-body">
                                             <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">edit your password and account details.</a></p>
@@ -56,10 +56,10 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade  show" id="profile" role="tabpanel" aria-labelledby="profile">
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5 class="mb-0">{{ request.user }}</h5>
+                                            <h5 class="mb-0">{{ request.user.first_name }}</h5>
                                         </div>
                                         <div class="card-body">
                                             <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">edit your password and account details.</a></p>
@@ -80,32 +80,26 @@
                                                             <th>Order</th>
                                                             <th>Date</th>
                                                             <th>Status</th>
+                                                            <th>Paid Status</th>
                                                             <th>Total</th>
                                                             <th>Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        {% for o in orders%}
                                                         <tr>
-                                                            <td>#1357</td>
-                                                            <td>March 45, 2020</td>
-                                                            <td>Processing</td>
-                                                            <td>$125.00 for 2 item</td>
-                                                            <td><a href="#" class="btn-small d-block">View</a></td>
+                                                            <td>INVOICE_NO-{{o.id}}</td>
+                                                            <td>{{o.order_date}}</td>
+                                                            <td>{{o.product_status|title}}</td>
+                                                            {% if o.paid_status == True %}
+                                                            <td><i class="fas fa-check-circle text-success">✅ </i></td>
+                                                            {% else %}
+                                                            <td><i class="text-danger"><span>❌</span></i></td>
+                                                            {% endif %}
+                                                            <td>${{o.price}}</td>
+                                                            <td><a href="{% url 'appmart:order_details' o.id %}" class="btn-small d-block">View</a></td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>#2468</td>
-                                                            <td>June 29, 2020</td>
-                                                            <td>Completed</td>
-                                                            <td>$364.00 for 5 item</td>
-                                                            <td><a href="#" class="btn-small d-block">View</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>#2366</td>
-                                                            <td>August 02, 2020</td>
-                                                            <td>Completed</td>
-                                                            <td>$280.00 for 3 item</td>
-                                                            <td><a href="#" class="btn-small d-block">View</a></td>
-                                                        </tr>
+                                                        {% endfor %}
                                                     </tbody>
                                                 </table>
                                             </div>
