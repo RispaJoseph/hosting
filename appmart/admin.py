@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 from account.models import User, Profile
-from appmart.models import CartOrder, CartOrderProducts, Address
+from appmart.models import CartOrder, CartOrderProducts, Address, Wishlist_model
 from django.contrib.auth import get_user_model
 from django.utils.safestring import mark_safe
 
@@ -33,6 +33,9 @@ class CartOrderProductsAdmin(admin.ModelAdmin):
   list_display = ['order', 'invoice_no', 'item', 'image', 'qty', 'price', 'total']
 
 
+class WishlistAdmin(admin.ModelAdmin):
+  list_display = ['user', 'product', 'date']
+
 class AddressAdmin(admin.ModelAdmin):
   list_display = ['user', 'address', 'status']
 
@@ -47,5 +50,6 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CartOrder, CartOrderAdmin)
 admin.site.register(CartOrderProducts, CartOrderProductsAdmin)
+admin.site.register(Wishlist_model,WishlistAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Profile, ProfileAdmin)

@@ -1,0 +1,82 @@
+﻿{% extends 'partial/base.html' %}
+{% load static %}
+{% block content %}
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow">Home</a>
+                    <span></span> Shop
+                    <span></span> Wishlist
+                </div>
+            </div>
+        </div>
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table shopping-summery text-center">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col" colspan="2">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Stock Status</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for w  in w %}
+                                    <tr>
+                                        <td class="image product-thumbnail"><img src="{{ w.product.image.url }}" alt="#"></td>
+                                        <td class="product-des product-name">
+                                            <h5 class="product-name"><a href="{% url 'appmart:product-detail' w.product.pid %}">{{ w.product.title|truncatechars:30 }}</a></h5>
+                                            <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
+                                            </p>
+                                        </td>
+                                        <td >
+                                            <!-- <span class="current-product-price-{{w.product.id}}" >${{ w.product.price }} </span> -->
+                                            <ins><span class="current-product-price-{{w.product.id}}" id="current-product-price">{{w.product.price}}</span></ins>
+                                        </td>
+                                        <td class="text-center" data-title="Stock">
+                                            <span class="color3 font-weight-bold">{% if w.product.in_stock %} In Stock {% else %} Out of Stock {% endif %}</span>
+                                        </td>
+                                        <td class="text-right" data-title="Cart">
+                                            <!-- <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ w.product.pid }}">
+                                            <input type="hidden" class="product-pid" value="{{ w.product.pid }}">
+                                            <input type="text" class="product-image-sliderr" value="{{ w.product.image.url }}">
+                                            <input type="hidden" class="product-id" value="{{ w.product.id }}">
+                                            <input type="hidden" class="product-title"  value="{{ w.product.title }}"> -->
+                                            
+                                            <!-- latest update -->
+                                            <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ w.product.id }}">
+                                            <input type="hidden" class="product-pid-{{w.product.id}}" value="{{w.product.pid}}">
+                                            <input type="hidden" class="product-image-{{w.product.id}}" value="{{w.product.image.url}}">
+                                            <input type="hidden" class="product-id-{{w.product.id}}" value="{{w.product.id}}">
+                                            <input type="hidden" class="product-title-{{w.product.id}}" value="{{w.product.title}}">
+                                            <input type="hidden" class="current-product-price-{{w.product.id}}" value="{{w.product.price}}">
+                                            <!-- end of latest update -->
+
+
+                                            <!-- <button class="btn btn-sm add-to-cart-btn" data-index="{{ w.product.id }}" id="add-to-cart-btn"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button> -->
+                                            <!-- <button type="submit" class="button button-add-to-cart" id="add-to-cart-btn">Add to cart</button> -->
+                                            <button type="submit" class="button button-add-to-cart" id="add-to-cart-btn" data-index="{{w.product.id}}">Add to cart</button>
+
+                                        </td>
+                                        <td class="action" data-title="Remove"><a href="#"><i class="fi-rs-trash"></i></a></td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td><p>Nothing in wishlist yet</p></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

@@ -48,11 +48,20 @@
                                         
 
                                         {% comment %} alerttttt..... {% endcomment %}
-                                        <input type="hidden" value="{{product.pid}}" class="product-pid" name="" id="">
+                                        <!-- <input type="hidden" value="{{product.pid}}" class="product-pid" name="" id="">
                                         <input type="hidden" value="{{product.id}}" class="product-id" name="" id="">
-                                        <input type="hidden" value="{{product.title}}" class="product-title" name="" id="">
-                                        <input type="hidden" value="{{product.price}}" class="product-price" name="" id="">
+                                        <input type="hidden" value="{{product.title}}" class="product-title" name="" id=""> -->
+                                        <!-- <input type="hidden" value="{{product.price}}" class="product-price" name="" id=""> -->
+                                        <!-- <input type="hidden" value="{{product.title}}" class="product-title" name="" id=""> -->
+                                        <!-- <input type="hidden" class="product-image-{{product.id}}" value="{{product.image.url}}"> -->
+                                        
+                                        <!-- latest input  -->
+                                        <input type="hidden" class="product-pid-{{product.id}}" value="{{product.pid}}">
+                                        <input type="text" class="product-image-{{product.id}}" value="{{product.image.url}}">
+                                        <input type="text" class="product-id-{{product.id}}" value="{{product.id}}">
+                                        <input type="text" class="product-title-{{product.id}}" value="{{product.title}}">
 
+                                        <!-- latest input ends here -->
                                         <h2 class="title-detail">{{product.title}}</h2>
                                         <div class="product-detail-rating">
                                             <!-- <div class="pro-details-brand">
@@ -68,7 +77,7 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="current-product-price1" id="current-product-price">{{product.price}}</span></ins>
+                                                <ins><span class="current-product-price-{{product.id}}" id="current-product-price">{{product.price}}</span></ins>
 
                                                 {% comment %} alerttttt..... {% endcomment %}
                                                 {% comment %} <input type="text" value="{{product.price}}" class="product-price" name="" id=""> {% endcomment %}
@@ -100,13 +109,13 @@
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>  -->
-                                            <input type="number" value="1" name="product-quantity" id="product-quantity" class="w-25 mb-10">
+                                            <input type="number" value="1" name="product-quantity" id="product-quantity" class="w-25 mb-10  product-quantity-{{product.id}}">
                                             
                                             <div class="product-extra-link2">
                                               {% if product.stock_count == '0' %}
                                               <button type="submit" class="button button-add-to-cart" disabled>Out Of Stock</button>
                                                 {% else %}
-                                               <button type="submit" class="button button-add-to-cart" id="add-to-cart-btn">Add to cart</button>
+                                               <button type="submit" class="button button-add-to-cart" id="add-to-cart-btn" data-index="{{product.id}}">Add to cart</button>
                                                {% endif %}
 
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>

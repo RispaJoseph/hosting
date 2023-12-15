@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address
+from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model
 from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
@@ -353,3 +353,78 @@ def payment_completed_view(request):
 
 def payment_failed_view(request):
     return render(request, 'mart/payment_failed.html') 
+
+
+
+def wishlist_view(request):
+    wishlist = Wishlist_model.objects.all()
+    print(wishlist)
+    
+    context = {
+        "w":wishlist
+    }
+    return render(request,'mart/wishlist.html', context)
+
+
+
+
+
+
+
+def add_to_wishlist(request):
+    product_id = request.GET['id']
+    product = Product.objects.get(id=product_id)
+    print("product id iss:" + product_id)
+
+    context = {}
+    wishlist_count = Wishlist_model.objects.filter(product=product, user=request.user).count()
+    print(wishlist_count)
+
+    if wishlist_count > 0:
+        context = {
+            "bool":True
+        }
+    else:
+        new_wishlist = Wishlist_model.objects.create(
+            product=product,
+            user=request.user
+        )
+        context = {
+            "bool" : True
+        }
+
+    return JsonResponse(context)
+
+
+
+
+
+# def add_to_wishlist(request):
+#     if request.user.is_authenticated:  # Check if the user is logged in
+#         product_id = request.GET.get('id')  # Use get() to avoid KeyError if 'id' is missing
+
+#         if product_id:
+#             product = Product.objects.get(id=product_id)
+
+#             context = {}
+#             wishlist_count = Wishlist_model.objects.filter(product=product, user=request.user).count()
+#             print(wishlist_count)
+
+#             if wishlist_count > 0:
+#                 context = {
+#                     "bool": True
+#                 }
+#             else:
+#                 new_wishlist = Wishlist_model.objects.create(
+#                     product=product,
+#                     user=request.user
+#                 )
+#                 context = {
+#                     "bool": True
+#                 }
+
+#             return JsonResponse(context)
+#         else:
+#             return JsonResponse({"error": "Product ID is missing"})
+#     else:
+#         return JsonResponse({"error": "User is not authenticated"})
