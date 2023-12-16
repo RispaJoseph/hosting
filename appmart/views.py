@@ -12,6 +12,8 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.utils import timezone
+from django.core import serializers
+
 # Create your views here.
 
 
@@ -428,3 +430,46 @@ def add_to_wishlist(request):
 #             return JsonResponse({"error": "Product ID is missing"})
 #     else:
 #         return JsonResponse({"error": "User is not authenticated"})
+
+
+
+
+
+# def remove_wishlist(request):
+#     pid = request.GET['id']
+#     wishlist = Wishlist_model.objects.filter(user=request.user)
+
+#     product = Wishlist_model.objects.get(id=pid)
+#     product.delete()
+
+#     context = {
+#         "bool" : True,
+#         "wishlist" : wishlist
+#     }
+#     data = render_to_string("mart/wishlist-list.html", context)
+#     return JsonResponse({"data":data, "w":wishlist})
+
+
+
+def remove_wishlist(request):
+    pid =request.GET['id']
+    wishlist= Wishlist_model.objects.filter(user=request.user)
+    
+    wishlist_d=Wishlist_model.objects.get(id=pid)
+    
+    delete_product=wishlist_d.delete()
+    
+    context={
+        "bool":True,
+        "w":wishlist
+        
+    }
+    if not wishlist_d:
+        messages.warning(request,"Nothiing")
+    
+    
+    wishlist_json=serializers.serialize('json', wishlist)
+    data= render_to_string("mart/wishlist-list.html", context)
+    
+    
+    return JsonResponse({"data":data,"w":wishlist_json})

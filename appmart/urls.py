@@ -25,7 +25,8 @@ urlpatterns = [
     path('dashboard/order/<int:id>',views.order_details,name='order_details'),
 
     path('wishlist/',views.wishlist_view,name='wishlist'),
-    path('add-to-wishlist/', views.add_to_wishlist, name='add-to-wishlist')
+    path('add-to-wishlist/', views.add_to_wishlist, name='add-to-wishlist'),
+    path('remove-from-wishlist/', views.remove_wishlist, name='remove-from-wishlist'),
 
     # path('update-status/', views.update_status, name='update_status'),
 
