@@ -306,11 +306,33 @@ def dashboard(request):
         return redirect('login')
     else:
         orders = CartOrder.objects.filter(user=request.user).order_by("-id")
+        address = Address.objects.filter(user=request.user)
+        
+        if request.method == "POST":
+            address = request.POST.get("address")
+            mobile = request.POST.get("phone")
+
+            new_address = Address.objects.create(
+                user = request.user,
+                address = address,
+                mobile = mobile,
+            )
+            messages.success(request, "Address Added Successfully.")
+            return redirect("appmart:dashboard")
+
+
         context = {
             "orders": orders,
+            "address" : address,
         }
         return render(request, 'mart/dashboard.html', context)
 
+
+def make_address_default(request):
+    id =request.GET['id']
+    Address.objects.update(status=False)
+    Address.objects.filter(id =id).update(status=True)
+    return JsonResponse({'boolean':True})
 
 
 

@@ -1,6 +1,11 @@
 ﻿{% extends 'partial/base.html' %}
 {% load static %}
 {% block content %}
+<head>
+    <!-- Other head content -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
 <main class="main">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
@@ -133,19 +138,67 @@
                                 </div>
                                 <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="card mb-3 mb-lg-0">
-                                                <div class="card-header">
-                                                    <h5 class="mb-0">Billing Address</h5>
+                                        <div>
+                                            <form action=""  class="mb-4" method ="POST" >
+                                              {% csrf_token %}
+                                              <div class="card-header">
+                                                <h5>Add Address</h5>
+
+                                              </div>
+                                              <div class="row" >
+                                                <div class="form-group col-md-6">
+                                                  <input type="text" placeholder="Address" required="" class="form-control" name="address"/>
+
                                                 </div>
-                                                <div class="card-body">
-                                                    <address>3522 Interstate<br> 75 Business Spur,<br> Sault Ste. <br>Marie, MI 49783</address>
-                                                    <p>New York</p>
-                                                    <a href="#" class="btn-small">Edit</a>
+                                                <br>
+                                                <div class="form-group col-md-6">
+                                                  <input type="text" placeholder="Phone" required="" class="form-control" name="phone"/>
+
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
+                                                <div class="col-md-12">
+                                                  <button type="submit" placeholder="Phone" required="" class="btn btn-fill-out submit font-weight-bold" name="submit"  value="submit"  >Save Address</button>
+
+                                                </div>
+
+                                              </div>
+
+
+
+                                            </form>
+                                          </div>
+                                          <hr>
+                                          <br>
+
+                                          {% for a in address %}
+                                          <div class="col-lg-6">
+                                              <div class="card mb-3 mb-lg-0">
+                                                  <div class="card-header">
+                                                      <h5 class="mb-0">Address {{forloop.counter}}</h5>
+                                                  </div>
+                                                  
+                                                  <div class="card-body border rounded">
+                                                      <address>
+                                                        <p>{{a.address}}</p>
+                                                        <p>{{a.mobile}}</p>
+
+                                                      </address>
+                                                      <p>New York</p>
+                                                      <a href="#" class="btn-small">Edit</a>
+                                                      <br>
+                                                      {% if a.status %}
+                                                      <i data-address-id ="{{a.id}}" class="fa fa-check-circle text-success check{{a.id}} check" ></i>
+                                                      <button  data-address-id="{{a.id}}" style="display:none;" class="btn make-default-address button{{a.id}} action_btn">Make Default</button>
+                                                      {% else %}
+                                                      <i data-address-id="{{a.id}}"  style="display:none;"  class="fa fa-check-circle text-success check{{a.id}} check" ></i>
+                                                      <button data-address-id="{{a.id}}"  class="btn make-default-address button{{a.id}} action_btn">Make Default</button>
+                                                      {% endif %}
+                                                  </div>
+                                                 
+                                              </div>
+                                          </div>
+                                          {% endfor %}
+                                        
+                                        <!-- <div class="col-lg-6">
                                             <div class="card">
                                                 <div class="card-header">
                                                     <h5 class="mb-0">Shipping Address</h5>
@@ -157,7 +210,7 @@
                                                     <a href="#" class="btn-small">Edit</a>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">

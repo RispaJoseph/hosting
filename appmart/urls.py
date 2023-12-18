@@ -28,6 +28,8 @@ urlpatterns = [
     path('add-to-wishlist/', views.add_to_wishlist, name='add-to-wishlist'),
     path('remove-from-wishlist/', views.remove_wishlist, name='remove-from-wishlist'),
 
+    path('make-default-address/', views.make_address_default, name='make-default-address'),
+
     # path('update-status/', views.update_status, name='update_status'),
 
     
