@@ -50,7 +50,8 @@
                                     <!-- <th scope="col">Status</th> -->
                                     <th scope="col">Order Date</th>
                                     <th scope="col">Action</th>
-                                    <th scope="col" class="text-end"> Product status </th>
+                                    <th scope="col" class="text-end"> More </th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,10 +89,15 @@
                                                 <a class="dropdown-item" href="#">Processing</a>
                                                 <a class="dropdown-item text-warning" href="#">Shipped</a>
                                                 <a class="dropdown-item text-success" href="#">Delivered</a>
-                                                <a class="dropdown-item text-danger" href="{% url 'appadmin:delete_cart_order' order_id=order.id  %}">Cancel</a>
+                                                <a class="dropdown-item text-danger" href="{% url 'appadmin:admin-cancel-order' order.id  %} ">Cancel</a>
                                             </div>
                                         </div> <!-- dropdown //end -->
                                     </td>
+                                    {% if order.product_status == 'cancelled' %}
+                                    <td><span class="text-danger">{{ order.product_status }}</span></td>
+                                    {%else%}
+                                    <td><span class="text-success">{{ order.product_status }}</span></td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                                 

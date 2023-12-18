@@ -112,7 +112,7 @@
                                             <input type="number" value="1" name="product-quantity" id="product-quantity" class="w-25 mb-10  product-quantity-{{product.id}}">
                                             
                                             <div class="product-extra-link2">
-                                              {% if product.stock_count == '0' %}
+                                              {% if product.stock == 0 %}
                                               <button type="submit" class="button button-add-to-cart" disabled>Out Of Stock</button>
                                                 {% else %}
                                                <button type="submit" class="button button-add-to-cart" id="add-to-cart-btn" data-index="{{product.id}}">Add to cart</button>
@@ -123,13 +123,13 @@
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
-                                            <li class="mb-5">SKU: <a href="#">{{product.sku}}</a></li>
+                                            <!-- <li class="mb-5">SKU: <a href="#">{{product.sku}}</a></li> -->
                                             
                                             <li>Availability:<span class="in-stock text-success ml-5">
-                                              {% if product.stock_count == '0' %}
+                                              {% if product.stock == 0 %}
                                               <h4>Out Of Stock</h4>
                                               {% else %}
-                                              {{product.stock_count}} Item{{product.stock_count|pluralize}} In Stock
+                                              {{product.stock}} Item{{product.stock|pluralize}} In Stock
                                             </span></li>
                                             {%endif%}
                                         </ul>

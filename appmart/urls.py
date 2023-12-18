@@ -30,7 +30,7 @@ urlpatterns = [
 
     path('make-default-address/', views.make_address_default, name='make-default-address'),
 
-    # path('update-status/', views.update_status, name='update_status'),
+    path('wallet-view/', views.wallet_view, name='wallet-view'),
 
     
 

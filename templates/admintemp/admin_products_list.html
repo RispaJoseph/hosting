@@ -54,7 +54,7 @@
                                         <th>Category</th>
                                         <th>Status</th>
                                         <th>Sale Price</th>                                    
-                                        {% comment %} <th>Stock Quantity</th> {% endcomment %}
+                                        <th>Stock Quantity</th> 
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -71,8 +71,8 @@
                                         <td><a href="{% url 'appadmin:admin_products_details' product.pid %}"> <h6 class="mb-0">{% if product.status %} <span style="color: rgb(143, 143, 39);">Active</span>  {% else %} <span style="color: rgb(120, 40, 40);">Blocked</span> {%endif %}</h6></a></td>
                                         <td>{{ product.price }}</td>
                                         <td class="text-end">
-                                            <span class="badge rounded-pill {% if product.stock_count != '0' %} alert-success {% else %} alert-danger {% endif %}">
-                                                {% if product.stock_count == '0' %} Out of Stock  {% else %}{{product.stock_count}}  {% endif %} </span>
+                                            <span class="badge rounded-pill {% if product.stock != 0 %} alert-success {% else %} alert-danger {% endif %}">
+                                                {% if product.stock == 0 %} Out of Stock  {% else %}{{product.stock}}  {% endif %} </span>
                                         </td>
                                     </tr>
                                     {% endfor %}

@@ -26,6 +26,10 @@ urlpatterns = [
     # path('delete_cart_order/<int:order_id>/',views.delete_cart_order,name='delete_cart_order'),
     path('admin_user/delete_cart_order/<int:order_id>/', views.delete_cart_order, name='delete_cart_order'),
 
+    # admin cancel order
+
+    path('admin-cancel-order/<int:id>',views.admin_cancel_order,name='admin-cancel-order'),
+
 
     
 

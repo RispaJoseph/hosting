@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model
+from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model, wallet
 from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.utils import timezone
 from django.core import serializers
+from decimal import Decimal
 
 # Create your views here.
 
@@ -334,10 +335,13 @@ def dashboard(request):
 
         print("user profile is : ", user_profile)
 
+        wallet_amount = wallet.objects.filter(user=request.user)
+
         context = {
             "user_profile": user_profile,
             "orders": orders,
             "address" : address,
+            "wallet_amount": wallet_amount,
         }
         return render(request, 'mart/dashboard.html', context)
 
@@ -385,11 +389,37 @@ def search_view(request):
 
 
 def cod(request):
+    if 'cart_data_obj' in request.session:
+        cart_data = request.session['cart_data_obj']
+        for p_id, item in cart_data.items():
+            print(item)
+            products=Product.objects.filter(title=item['title'])
+            for p in products:
+                p.stock=int(p.stock) - int(item['qty'])
+                p.save() 
+
     return render(request,'mart/cash_on_delivery.html')
+
+
+
+
 
 @login_required
 def payment_completed_view(request):
     cart_total_amount = 0
+# stock count mgt
+    if 'cart_data_obj' in request.session:
+        cart_data = request.session['cart_data_obj']
+        for p_id, item in cart_data.items():
+            print(item)
+            products=Product.objects.filter(title=item['title'])
+            for p in products:
+                p.stock=int(p.stock) - int(item['qty'])
+                p.save()
+    # id = request.GET['id']
+    # orders = CartOrder.objects.filter(id=id)
+    # print(orders)
+
     current_time = timezone.now().date()
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
@@ -519,3 +549,56 @@ def remove_wishlist(request):
     
     
     return JsonResponse({"data":data,"w":wishlist_json})
+
+
+
+def wallet_view(request):
+    total_amount = 0
+    if 'cart_data_obj' in request.session:
+        cart_data = request.session['cart_data_obj']
+        for p_id, item in cart_data.items():
+            print(item)
+            products=Product.objects.filter(title=item['title'])
+            for p in products:
+                p.stock=int(p.stock) - int(item['qty'])
+                p.save() 
+
+    #create wallet
+    user_wallet, created = wallet.objects.get_or_create(user=request.user)
+
+    print(user_wallet.Amount)
+
+
+    if 'cart_data_obj' in request.session:
+        cart_data = request.session['cart_data_obj']
+        print(cart_data)
+
+
+        for p_id, item in cart_data.items():
+            # try:
+            #     # Split the price string into individual prices and convert to float
+            #     prices = [float(price) for price in item.get('price', '').split()]
+            #     # Sum up the individual prices
+            #     total_price = sum(prices)
+            #     qty = int(item.get('qty', 0))
+            #     total_amount += qty * total_price
+            # except (ValueError, TypeError):
+            #     # Handle conversion errors if qty or total_price is not a valid number
+            #     pass
+
+            for p_id, item in request.session['cart_data_obj'].items():
+                total_amount += int(item['qty']) * float(item['price'])
+
+        total_amount_decimal = Decimal(str(total_amount))
+
+        if user_wallet.Amount < total_amount:
+            messages.error(request, "Wallet money is not enough to purchase this product")
+            return redirect("appmart:checkout")
+        else:
+            user_wallet.Amount-=total_amount_decimal
+            user_wallet.save()
+            messages.success(request,f"{total_amount_decimal} has been deducted from your wallet" )
+    return render(request,'mart/cash_on_delivery.html')
+
+
+    

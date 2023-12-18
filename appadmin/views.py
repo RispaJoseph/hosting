@@ -170,7 +170,7 @@ def admin_add_product(request):
 
     if request.method == 'POST':
         product_name= request.POST.get('title')
-        # product_sk_id= request.POST.get('sku')
+        product_stock= request.POST.get('stock_count')
         description= request.POST.get('description')
         max_price= request.POST.get('old_price')
         sale_price= request.POST.get('price')
@@ -183,7 +183,7 @@ def admin_add_product(request):
 
         product = Product(
             title=product_name,
-            # sku=product_sk_id,
+            stock=product_stock,
             category=category,
             
             description=description,
@@ -454,3 +454,36 @@ def delete_cart_order(request, order_id):
         return redirect('appadmin:cart_order_list')
     except CartOrder.DoesNotExist:
         return HttpResponse("Order not found", status=404)
+
+
+
+def admin_cancel_order(request, id):
+    order = get_object_or_404(CartOrder, id=id)
+    # user_wallet = get_object_or_404(wallet, user=request.user)
+    # user_wallet, created = wallet.objects.get_or_create(user=request.user)
+
+    if order.product_status == 'cancelled':
+        messages.warning(request, f"Order {order.id} is already cancelled.")
+    else:
+        # Update order status to 'cancelled'
+        order.product_status = 'cancelled'
+        order.save()
+        
+        # if order.paid_status==True:
+        #     user_wallet.Amount+=order.price
+        #     user_wallet.save()
+        #     messages.warning(request,"Refund amount has been added to the wallet")
+            
+
+        # Update product stock count
+        products = CartOrderProducts.objects.filter(order=order)
+        for p in products:
+            productss = Product.objects.filter(title=p.item)
+            for s in productss:
+                s.stock = int(s.stock) + p.qty
+                s.save()
+
+        messages.success(request, f"Order {order.id} has been cancelled successfully.")
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))    
+
