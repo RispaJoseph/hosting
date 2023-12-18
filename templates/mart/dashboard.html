@@ -61,15 +61,41 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile">
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                     <div class="card">
-                                        <div class="card-header">
-                                            <h5 class="mb-0">{{ request.user.first_name }}</h5>
+                                        <div class="card-header border-bottom">
+                                            <h5 class="mb-0">My Profile</h5>
                                         </div>
-                                        <div class="card-body">
-                                            <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">edit your password and account details.</a></p>
+                                        
+                                        <div class="card-body mb-2" style="display: flex; align-items: center; gap: 10px;">
+                                            <div>
+                                                {% if user_profile.image %}
+                                                <span><img src="{{ user_profile.image.url }}" style="width: 150px; object-fit: cover; border-radius: 50%; height: 150px;" alt=""></span>
+                                                {% else %}
+                                                <p>No image available</p>
+                                                {% endif %}
+                                            </div>                                 
+                                            <div>
+                                                <span><input class="mb-2" type="text" value="Name - {{ user_profile.full_name }}"></span>
+                                                <span><input class="mb-2" type="text" value="Bio - {{ user_profile.bio }}"></span>
+                                                <span><input class="mb-2" type="text" value="Phone - {{ user_profile.phone }}"></span>
+                                                {% if user_profile.verified == True %}
+                                                <div class="p-4 border rounded">
+                                                    <span>verified </span><span><i class="fas fa-check-circle"></i></span>
+                                                </div>
+                                                {% else %}
+                                                <div class="p-4 border rounded">
+                                                    <span>Not verified </span><span><i class="fas fa-x"></i></span>
+                                                </div>
+                                                {% endif %}
+                                                
+                                            </div>
                                         </div>
+                                        
                                     </div>
+                                </div>
+                                <div class="p-4 border rounded">
+                                    <a href="{% url 'account:profile-update'%}"><button class="btn btn-success">Edit Profile</button></a>
                                 </div>
                                 
                                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
@@ -219,26 +245,26 @@
                                             <h5>Account Details</h5>
                                         </div>
                                         <div class="card-body">
-                                            <p>Already have an account? <a href="page-login-register.html">Log in instead!</a></p>
-                                            <form method="post" name="enq">
+                                            <form method="post" name="enq" action="{% url 'account:change-password' %}">
+                                                {% csrf_token %}
                                                 <div class="row">
                                                     <div class="form-group col-md-6">
                                                         <label>First Name <span class="required">*</span></label>
-                                                        <input required="" class="form-control square" name="name" type="text">
+                                                        <input class="form-control square" name="name" type="text">
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label>Last Name <span class="required">*</span></label>
-                                                        <input required="" class="form-control square" name="phone">
+                                                        <input class="form-control square" name="phone">
                                                     </div>
                                                     <div class="form-group col-md-12">
-                                                        <label>Display Name <span class="required">*</span></label>
-                                                        <input required="" class="form-control square" name="dname" type="text">
+                                                        <label>Username <span class="required">*</span></label>
+                                                        <input  class="form-control square" name="dname" type="text">
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>Email Address <span class="required">*</span></label>
-                                                        <input required="" class="form-control square" name="email" type="email">
+                                                        <input  class="form-control square" name="email" type="email">
                                                     </div>
-                                                    <div class="form-group col-md-12">
+                                                    <!-- <div class="form-group col-md-12">
                                                         <label>Current Password <span class="required">*</span></label>
                                                         <input required="" class="form-control square" name="password" type="password">
                                                     </div>
@@ -249,11 +275,31 @@
                                                     <div class="form-group col-md-12">
                                                         <label>Confirm Password <span class="required">*</span></label>
                                                         <input required="" class="form-control square" name="cpassword" type="password">
+                                                    </div> -->
+                                                    
+                                                </div>
+                                                
+                                                <div class="card-header">
+                                                    <h5>Change Password</h5>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                        <label>Current Password <span class="required">*</span></label>
+                                                        <input required="" class="form-control square" name="password" type="password">
                                                     </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>New Password <span class="required">*</span></label>
+                                                        <input required="" class="form-control square" name="new_password" type="password">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Confirm Password <span class="required">*</span></label>
+                                                        <input required="" class="form-control square" name="confirm_password" type="password">
+                                                    </div>
+
                                                     <div class="col-md-12">
                                                         <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
                                                     </div>
-                                                </div>
+
+
                                             </form>
                                         </div>
                                     </div>

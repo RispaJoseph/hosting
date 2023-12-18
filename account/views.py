@@ -1,11 +1,12 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views.decorators.cache import never_cache
-from .forms import SignUpForm
+from .forms import SignUpForm, Profileform
 from django.contrib.auth import login,authenticate,logout
 from django.contrib import messages
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.forms import AuthenticationForm
-from account.models import User
+from account.models import User,Profile
+from django.contrib.auth import update_session_auth_hash
 
 import random
 from django.core.mail import send_mail
@@ -104,3 +105,60 @@ def logoutUser(request):
     messages.success(request,f'You logged out')
     return redirect('appmart:index') 
 
+
+def profile_update(request):
+    profile =Profile.objects.get(user=request.user)
+    if request.method == 'POST':
+        
+        form =Profileform(request.POST, request.FILES,instance=profile)
+        if form.is_valid():
+            new_form= form.save(commit=False)
+            new_form.user= request.user
+            new_form.save()
+            messages.success(request,'Profile updated Successfully')
+            return redirect('appmart:dashboard')
+        
+    else:
+        form=Profileform(instance=profile)
+    
+         
+    context={
+        'form':form,
+        'profile':profile
+        }
+    return render(request,'user/profile-edit.html',context)
+
+
+
+
+def change_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # Manual validation
+        if not request.user.check_password(old_password):
+            messages.error(request, 'Current password is incorrect.')
+            return redirect('account:change-password')
+
+        if new_password != confirm_password:
+            messages.error(request, 'New Password and Confirm Password do not match.')
+            return redirect('account:change-password')
+        
+        if old_password == new_password:
+            messages.error(request, 'Old and New password are same.')
+            return redirect('account:change-password')
+
+        if len(new_password) < 8:
+            messages.error(request, 'New Password must be at least 8 characters long.')
+            return redirect('account:change-password')
+
+        request.user.set_password(new_password)
+        request.user.save()
+
+        update_session_auth_hash(request, request.user)  # Update the session with the new password
+        messages.success(request, 'Your password was successfully updated!')
+        return redirect('appmart:dashboard')
+
+    return render(request, 'appmart/dashboard.html')

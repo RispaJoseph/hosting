@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from account.models import User
+from account.models import User, Profile
 
 class SignUpForm(UserCreationForm):
     # password2 = forms.CharField(label='Confirm Password (again)',
@@ -15,3 +15,16 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ['username','first_name','last_name', 'email']
         labels = {'email' : 'Email'}
+
+    
+
+class Profileform(forms.ModelForm):
+    full_name = forms.CharField(max_length=30,widget=forms.TextInput(attrs= {"placeholder":"Full Name"}))
+
+    bio = forms.CharField(max_length=30,widget=forms.TextInput(attrs= {"placeholder":"Bio"}))
+    phone = forms.CharField(max_length=30,widget=forms.TextInput(attrs= {"placeholder":"Phone"}))
+
+
+    class Meta:
+        model=Profile
+        fields =['full_name','image','bio','phone']

@@ -262,7 +262,12 @@ def checkout_view(request):
     #     for p_id, item in request.session['cart_data_obj'].items():
     #         cart_total_amount += int(item['qty']) * float(item['price'])
 
-    return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button})
+    try:
+        active_address = Address.objects.get(user=request.user, status=True)
+    except:
+        messages.warning(request, "There are multiple addresses, only one should be Activated")
+        active_address = None
+    return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button, "active_address":active_address})
 
     
 
@@ -299,14 +304,17 @@ def checkout_view(request):
 #     return render(request, 'mart/dashboard.html', context)
 
 
-@login_required(login_url='account:login')
+# @login_required(login_url='account:login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     if not request.user.is_authenticated:
-        return redirect('login')
+        messages.warning(request, "Please log in to access Dashboard.")
+        return redirect('appmart:index')
     else:
         orders = CartOrder.objects.filter(user=request.user).order_by("-id")
         address = Address.objects.filter(user=request.user)
+
+        
         
         if request.method == "POST":
             address = request.POST.get("address")
@@ -319,20 +327,36 @@ def dashboard(request):
             )
             messages.success(request, "Address Added Successfully.")
             return redirect("appmart:dashboard")
+        else: 
+            print("Error")
 
+        user_profile, created = Profile.objects.get_or_create(user=request.user)
+
+        print("user profile is : ", user_profile)
 
         context = {
+            "user_profile": user_profile,
             "orders": orders,
             "address" : address,
         }
         return render(request, 'mart/dashboard.html', context)
 
 
+# def make_address_default(request):
+#     id =request.GET['id']
+#     Address.objects.update(status=False)
+#     Address.objects.filter(id =id).update(status=True)
+#     return JsonResponse({'boolean':True})
+
 def make_address_default(request):
-    id =request.GET['id']
-    Address.objects.update(status=False)
-    Address.objects.filter(id =id).update(status=True)
-    return JsonResponse({'boolean':True})
+    id = request.GET.get('id')
+    if id:
+        Address.objects.update(status=False)
+        Address.objects.filter(id=id).update(status=True)
+        return JsonResponse({'boolean': True})
+    else:
+        return JsonResponse({'boolean': False})
+
 
 
 

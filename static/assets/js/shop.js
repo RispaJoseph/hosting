@@ -404,6 +404,35 @@ $(document).on("click", ".delete-wishlist-product", function(){
 
 // Making default address
 
+// $(document).on("click", ".make-default-address", function(){
+//   let this_val = $(this);
+//   let id = this_val.attr("data-address-id");  
+  
+//   console.log("ID is:", id);
+//   console.log("Element is:", this_val);
+
+
+//   $.ajax({
+//       url:"/make-default-address",
+//       data:{
+//           "id":id
+//       },
+//       dataType:"json",
+//       success: function(response){
+//           console.log("Address made default...");
+//           if (response.boolean == true){
+//               $(".check").hide()
+//               $(".action_btn").show()
+
+//               $(".check"+id).show()
+//               $(".button"+id).hide()
+//           }
+//       }
+
+//   })
+// });
+
+
 $(document).on("click", ".make-default-address", function(){
   let this_val = $(this);
   let id = this_val.attr("data-address-id");  
@@ -411,23 +440,24 @@ $(document).on("click", ".make-default-address", function(){
   console.log("ID is:", id);
   console.log("Element is:", this_val);
 
-
   $.ajax({
-      url:"/make-default-address",
-      data:{
-          "id":id
-      },
-      dataType:"json",
-      success: function(response){
-          console.log("Address made default...");
-          if (response.boolean == true){
-              $(".check").hide()
-              $(".action_btn").show()
+    url: "/make-default-address/",
+    data: {
+      "id": id
+    },
+    dataType: "json",
+    success: function(response){
+      console.log("Address made default...");
+      if (response.boolean == true){
+        // Hide all checkmarks and show all buttons
+        $(".fa-check-circle").hide();
+        $(".make-default-address").show();
 
-              $(".check"+id).show()
-              $(".button"+id).hide()
-          }
+        // Show checkmark and hide button for the selected address
+        $(".check" + id).show();
+        $(".button" + id).hide();
       }
-
-  })
+    }
+  });
 });
+

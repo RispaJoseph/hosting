@@ -75,15 +75,13 @@
                         </div>
                         <form method="post">
                             <div class="form-group">
-                                <input type="text" required="" name="fname" placeholder="First name *">
+                                <input type="text" required="" name="fname"  value="{{ request.user.first_name }}"  placeholder="First name *">
                             </div>
                             <div class="form-group">
-                                <input type="text" required="" name="lname" placeholder="Last name *">
+                                <input type="text" required="" name="lname" value="{{ request.user.last_name }}"  placeholder="Last name *">
                             </div>
-                            <div class="form-group">
-                                <input required="" type="text" name="cname" placeholder="Company Name">
-                            </div>
-                            <div class="form-group">
+                           
+                            <!-- <div class="form-group">
                                 <div class="custom_select">
                                     <select class="form-control select-active">
                                         <option value="">Select an option...</option>
@@ -333,14 +331,14 @@
                                         <option value="ZW">Zimbabwe</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="form-group">
-                                <input type="text" name="billing_address" required="" placeholder="Address *">
+                                <input type="text" name="billing_address" required="" value="{{ active_address.address }}" placeholder="Address *">
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <input type="text" name="billing_address2" required="" placeholder="Address line2">
-                            </div>
-                            <div class="form-group">
+                            </div> -->
+                            <!-- <div class="form-group">
                                 <input required="" type="text" name="city" placeholder="City / Town *">
                             </div>
                             <div class="form-group">
@@ -348,25 +346,25 @@
                             </div>
                             <div class="form-group">
                                 <input required="" type="text" name="zipcode" placeholder="Postcode / ZIP *">
+                            </div> -->
+                            <div class="form-group">
+                                <input required="" type="text" name="phone" value="{{ active_address.mobile }}" placeholder="Phone *">
                             </div>
                             <div class="form-group">
-                                <input required="" type="text" name="phone" placeholder="Phone *">
+                                <input required="" type="text" name="email" value="{{ request.user.email }}" placeholder="Email address *">
                             </div>
-                            <div class="form-group">
-                                <input required="" type="text" name="email" placeholder="Email address *">
-                            </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="checkbox">
                                     <div class="custome-checkbox">
                                         <input class="form-check-input" type="checkbox" name="checkbox" id="createaccount">
                                         <label class="form-check-label label_info" data-bs-toggle="collapse" href="#collapsePassword" data-target="#collapsePassword" aria-controls="collapsePassword" for="createaccount"><span>Create an account?</span></label>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="collapsePassword" class="form-group create-account collapse in">
+                            </div> -->
+                            <!-- <div id="collapsePassword" class="form-group create-account collapse in">
                                 <input required="" type="password" placeholder="Password" name="password">
-                            </div>
-                            <div class="ship_detail">
+                            </div> -->
+                            <!-- <div class="ship_detail">
                                 <div class="form-group">
                                     <div class="chek-form">
                                         <div class="custome-checkbox">
@@ -652,13 +650,13 @@
                                         <input required="" type="text" name="zipcode" placeholder="Postcode / ZIP *">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="mb-20">
+                            </div> -->
+                            <!-- <div class="mb-20">
                                 <h5>Additional information</h5>
                             </div>
                             <div class="form-group mb-30">
                                 <textarea rows="5" placeholder="Order notes"></textarea>
-                            </div>
+                            </div> -->
                         </form>
                     </div>
                     

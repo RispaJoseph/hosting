@@ -106,4 +106,5 @@ class Profile(models.Model):
     verified = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.full_name
+        # return self.full_name
+        return f"Profile of {self.user.username}"
