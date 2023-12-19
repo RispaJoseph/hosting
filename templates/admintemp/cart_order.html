@@ -81,7 +81,7 @@
                                     
 
                                     <td>{{ order.order_date}}</td>
-                                    <td><a href="#">View</a></td>
+                                    <td><a href="{% url 'appadmin:admin_order_detail' order.id %}">View</a></td>
                                     <!-- <td><b>Marvin McKinney</b></td> -->
                                     <!-- <td><template class="__cf_email__" data-cfemail="aec3cfdcd8c7c0eecbd6cfc3dec2cb80cdc1c3">[email&#160;protected]</template></td>
                                     <td>$9.00</td>

@@ -30,6 +30,8 @@ urlpatterns = [
 
     path('admin-cancel-order/<int:id>',views.admin_cancel_order,name='admin-cancel-order'),
 
+    path('admin_order_detail/<int:id>/',views.admin_order_detail,name='admin_order_detail'),
+
 
     
 

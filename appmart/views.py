@@ -398,6 +398,8 @@ def cod(request):
                 p.stock=int(p.stock) - int(item['qty'])
                 p.save() 
 
+    del request.session['cart_data_obj']
+
     return render(request,'mart/cash_on_delivery.html')
 
 
@@ -428,7 +430,8 @@ def payment_completed_view(request):
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
-    return render(request, 'mart/payment_completed.html', {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'current_time': current_time, })
+        del request.session['cart_data_obj']
+    return render(request, 'mart/payment_completed.html', {"cart_data": cart_data, 'totalcartitems': len(cart_data), 'cart_total_amount': cart_total_amount, 'current_time': current_time, })
 
                                                            
 
@@ -602,6 +605,13 @@ def wallet_view(request):
             user_wallet.Amount-=total_amount_decimal
             user_wallet.save()
             messages.success(request,f"{total_amount_decimal} has been deducted from your wallet" )
+
+        latest_order = CartOrder.objects.filter(user=request.user).order_by('-order_date').first()
+        latest_order.paid_status=True
+        latest_order.save()
+        print(latest_order)
+
+    del request.session['cart_data_obj']
     return render(request,'mart/cash_on_delivery.html')
 
 

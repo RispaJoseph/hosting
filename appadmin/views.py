@@ -404,6 +404,18 @@ def cart_order_list(request):
     return render(request,'admintemp/cart_order.html', context)
 
 
+def admin_order_detail(request,id):
+
+    order = get_object_or_404(CartOrder,id=id)
+    product_orders = CartOrderProducts.objects.filter(order=order)
+
+    context = {
+        'order' : order,
+        'product_orders' : product_orders,
+    }
+    return render(request,'admintemp/admin_order_detail.html',context)
+
+
 # def admin_products_list(request):
 #      products = Product.objects.all()
 #      context = {
@@ -459,6 +471,7 @@ def delete_cart_order(request, order_id):
 
 def admin_cancel_order(request, id):
     order = get_object_or_404(CartOrder, id=id)
+    user_wallet = wallet.objects.get(user=request.user)
     # user_wallet = get_object_or_404(wallet, user=request.user)
     # user_wallet, created = wallet.objects.get_or_create(user=request.user)
 
@@ -468,11 +481,13 @@ def admin_cancel_order(request, id):
         # Update order status to 'cancelled'
         order.product_status = 'cancelled'
         order.save()
+
         
-        # if order.paid_status==True:
-        #     user_wallet.Amount+=order.price
-        #     user_wallet.save()
-        #     messages.warning(request,"Refund amount has been added to the wallet")
+        
+        if order.paid_status==True:
+            user_wallet.Amount+=order.price
+            user_wallet.save()
+            messages.warning(request,"Refund amount has been added to the wallet")
             
 
         # Update product stock count
