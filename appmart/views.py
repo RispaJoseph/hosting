@@ -419,6 +419,10 @@ def payment_completed_view(request):
     # id = request.GET['id']
     # orders = CartOrder.objects.filter(id=id)
     # print(orders)
+    latest_order = CartOrder.objects.filter(user=request.user).order_by('-order_date').first()
+    latest_order.paid_status=True
+    latest_order.save()
+    print(latest_order)
 
     current_time = timezone.now().date()
     if 'cart_data_obj' in request.session:

@@ -65,11 +65,17 @@
                                         <label for="myCheckbox" class="custom-checkbox">{% if order.paid_status %}<i class="fas fa-check"></i>{% endif %}</label>
                                     </td> -->
 
-                                    <td>
+                                    <!-- <td>
                                         <input type="checkbox" style="border: 2px solid blue; background-color: lightblue; width: 20px; height: 20px;" id="myCheckbox" name="myCheckbox" value="checkboxValue" {% if order.paid_status %}checked{% endif %} disabled>
                                         <label for="myCheckbox" class="custom-checkbox">{% if order.paid_status %}<i class="fas fa-check"></i>{% endif %}</label>
-                                    </td>
-                                    
+                                    </td> -->
+
+                                        {% if order.paid_status %}
+                                            <td><span class="text-success">Payment Received</span></td>
+                                        {% else %}
+                                            <td class="text-danger" >COD</td>
+                                        {% endif %}
+                
                                     
                                     
                                     
