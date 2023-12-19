@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from appmart.models import *
+from decimal import Decimal
 
 
 # Create your views here.
@@ -471,7 +472,9 @@ def delete_cart_order(request, order_id):
 
 def admin_cancel_order(request, id):
     order = get_object_or_404(CartOrder, id=id)
-    user_wallet = wallet.objects.get(user=request.user)
+    # user_wallet = wallet.objects.get(user=request.user)
+    user_wallet, created = wallet.objects.get_or_create(user=request.user)
+
     # user_wallet = get_object_or_404(wallet, user=request.user)
     # user_wallet, created = wallet.objects.get_or_create(user=request.user)
 
@@ -484,11 +487,16 @@ def admin_cancel_order(request, id):
 
         
         
-        if order.paid_status==True:
-            user_wallet.Amount+=order.price
-            user_wallet.save()
-            messages.warning(request,"Refund amount has been added to the wallet")
+        # if order.paid_status==True:
+        #     user_wallet.Amount+=order.price
+        #     user_wallet.save()
+        #     messages.warning(request,"Refund amount has been added to the wallet")
             
+        if order.paid_status == True:
+            refund_amount = Decimal(order.price)  # Convert the float to Decimal
+            user_wallet.Amount += refund_amount
+            user_wallet.save()
+            messages.warning(request, "Refund amount has been added to the wallet")
 
         # Update product stock count
         products = CartOrderProducts.objects.filter(order=order)

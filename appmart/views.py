@@ -265,9 +265,10 @@ def checkout_view(request):
 
     try:
         active_address = Address.objects.get(user=request.user, status=True)
-    except:
+    except Address.DoesNotExist:
         messages.warning(request, "There are multiple addresses, only one should be Activated")
-        active_address = None
+        # active_address = None
+        return redirect('appmart:dashboard')
     return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button, "active_address":active_address})
 
     
@@ -442,7 +443,7 @@ def payment_failed_view(request):
 
 
 def wishlist_view(request):
-    wishlist = Wishlist_model.objects.all()
+    wishlist = Wishlist_model.objects.filter(user=request.user)
     print(wishlist)
     
     context = {
