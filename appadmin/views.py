@@ -31,10 +31,10 @@ def admin_logout(request):
     messages.success(request,f'You logged out')
     return redirect('appadmin:admin_login') 
 
-
+@login_required(login_url='appadmin:admin_login')
 def dashboard(request):
-     if not request.user.is_authenticated:
-          return redirect('adminapp:admin_login')
+     if not request.user.is_superadmin:
+          return redirect('appadmin:admin_login')
      
      product_count = Product.objects.count()
      category_count = Category.objects.count()
@@ -46,7 +46,7 @@ def dashboard(request):
 
      return render(request, 'admintemp/admin_index.html',context)
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_products_list(request):
      products = Product.objects.all()
      context = {
@@ -58,7 +58,7 @@ def admin_products_list(request):
 
 
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_category_list(request):
     if not request.user.is_authenticated:
         return redirect('appadmin:admin_login')
@@ -77,7 +77,7 @@ def admin_category_list(request):
 
 
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_add_category(request):
     if request.method == 'POST':
         cat_title = request.POST.get('category_name')
@@ -94,11 +94,11 @@ def admin_add_category(request):
 
 
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_category_edit(request):
     return render(request, 'admintemp/admin_category_edit.html')
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_category_edit(request, cid):
     if not request.user.is_authenticated:
         return redirect('appadmin:admin_login')
@@ -131,7 +131,7 @@ def admin_category_edit(request, cid):
 
     return render(request, 'admintemp/admin_category_edit.html', context)
 
-
+@login_required(login_url='appadmin:admin_login')
 def delete_category(request,cid):
     if not request.user.is_authenticated:
         return HttpResponse("Unauthorized", status=401)
@@ -143,7 +143,7 @@ def delete_category(request,cid):
 
     return redirect('appadmin:admin_category_list')
 
-
+@login_required(login_url='appadmin:admin_login')
 def available_category(request,cid):
     if not request.user.is_authenticated:
         return HttpResponse("Unauthorized", status=401)
@@ -162,7 +162,7 @@ def available_category(request,cid):
 
 
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_add_product(request):
     if not request.user.is_authenticated:
         return HttpResponse("Unauthorized", status=401)
@@ -270,7 +270,7 @@ def admin_add_product(request):
 #     return render(request, 'admintemp/admin_products_details.html', context)
 
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_update_product(request, pid):
     # Retrieve the product instance using its ID (pid)
     product = get_object_or_404(Product, pid=pid)
@@ -321,7 +321,7 @@ def delete_product(request,pid):
         return HttpResponse("Product not found", status=404)
 
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_products_details(request, pid):
     print(pid)
     if not request.user.is_authenticated:
@@ -395,7 +395,7 @@ def block_unblock_user(request,user_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
   
 
-
+@login_required(login_url='appadmin:admin_login')
 def cart_order_list(request):
     orders = CartOrder.objects.all().order_by("-order_date")
     print(orders)
@@ -404,7 +404,7 @@ def cart_order_list(request):
     }
     return render(request,'admintemp/cart_order.html', context)
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_order_detail(request,id):
 
     order = get_object_or_404(CartOrder,id=id)
@@ -456,7 +456,7 @@ def admin_order_detail(request,id):
 #     except CartOrder.DoesNotExist:
 #         return HttpResponse("Order not found", status=404)
 
-
+@login_required(login_url='appadmin:admin_login')
 def delete_cart_order(request, order_id):
     if not request.user.is_authenticated:
         return redirect('appadmin:admin_login')
@@ -469,7 +469,7 @@ def delete_cart_order(request, order_id):
         return HttpResponse("Order not found", status=404)
 
 
-
+@login_required(login_url='appadmin:admin_login')
 def admin_cancel_order(request, id):
     order = get_object_or_404(CartOrder, id=id)
     # user_wallet = wallet.objects.get(user=request.user)

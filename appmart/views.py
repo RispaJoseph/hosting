@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.template.loader import render_to_string 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
+from django.template.loader import render_to_string
 
 from django.urls import reverse
 from django.conf import settings
@@ -52,6 +53,7 @@ def category_list_view(request):
 def category_product_list_view(request, cid):
     category = Category.objects.get(cid=cid)
     products = Product.objects.filter(category=category, status = True)
+    
 
     context = {
         "category":category,
@@ -62,8 +64,9 @@ def category_product_list_view(request, cid):
 def product_all_list(request):
     category_block = Category.objects.filter(is_blocked=True)
     products = Product.objects.filter(status = True).exclude(category__in=category_block)
-    category = Category.objects.filter(is_blocked=True)
-
+    category = Category.objects.filter(is_blocked=False)
+    print(category)
+    print(products)
     context = {
         "products":products,
         "category":category,
@@ -615,5 +618,48 @@ def wallet_view(request):
     del request.session['cart_data_obj']
     return render(request,'mart/cash_on_delivery.html')
 
+
+# def filter_product(request):    
+#     # try:
+#             categories = request.GET.getlist('category[]')
+#             # print("Selected Categories:", categories)
+
+#             # min_price= request.GET['min_price']
+#             # max_price= request.GET['max_price']
+            
+#             products = Product.objects.filter(status=True).order_by('-id').distinct()
+            
+#             # products=products.filter(price__gte=min_price)
+#             # products=products.filter(price__lte=max_price)
+#             # print("All Products:", products)
+#             # print("Selected Categories:", categories)
+
+#             if len(categories) > 0:
+#                 products = products.filter(category__cid__in=categories).distinct()
+#                 # print("Filtered Product:", products)
+
+#             data = render_to_string('appmart/product-list.html', {"products": products})
+#             return JsonResponse({"data": data})
+#     # except Exception as e:
+#             # return JsonResponse({"error": str(e)})
+
+
+
+def filter_product(request):    
+  
+    categories = request.GET.getlist('category[]')
+    
+    
+    products = Product.objects.filter(status=True).order_by('-id').distinct()
+    
+    
+
+    if len(categories) > 0:
+        products = products.filter(category__cid__in=categories).distinct()
+        
+
+    data = render_to_string('mart/product-list.html', {"products": products})
+    return JsonResponse({"data": data})
+    
 
     

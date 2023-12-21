@@ -32,6 +32,8 @@ urlpatterns = [
 
     path('wallet-view/', views.wallet_view, name='wallet-view'),
 
+    path('filter-product/', views.filter_product,name='filter-product'),
+
     
 
 ]
