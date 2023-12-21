@@ -479,12 +479,23 @@ $(document).on("click", ".make-default-address", function(){
   });
 });
 
+
+
+
+
+
 // category filter
 $(document).ready(function (){
   $(".filter-checkbox ,#apply-filter-btn").on("click", function(){
     console.log("A checkbox have been clicked")  ;
 
     let filter_object = {}
+
+    let min_price = $("#max_price").attr("min")
+    let max_price = $("#max_price").val()
+
+    filter_object.min_price = min_price;
+    filter_object.max_price = max_price;
 
     $(".filter-checkbox").each(function(){
       let filter_value = $(this).val()
@@ -512,5 +523,36 @@ $(document).ready(function (){
     })
   })
 
+  $("#max_price").on("blur",function(){
+    let min_price = $(this).attr("min")
+    let max_price = $(this).attr("max")
+    let current_price = $(this).val()
+
+    // console.log("Current Price is:", current_price);
+    // console.log("Max Price is:", max_price);
+    // console.log("Min Price is:", min_price);
+
+    if(current_price < parseInt(min_price) || current_price > parseInt(max_price)){
+      // console.log("Price error occures")
+
+      min_Price = Math.round(min_price * 100) / 100 
+      max_Price = Math.round(max_price * 100) / 100 
+
+    
+      // console.log("Min Price is:", min_Price);
+      // console.log("Max Price is:", max_Price);
+
+      alert("Price must be between $" + min_price + 'and $' + max_price)
+      $(this).val(min_price)
+      $('#range').val(min_price)
+      
+      $(this).focus()
+
+      return false
+
+    }
+  })
+
 })    
  
+

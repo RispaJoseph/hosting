@@ -646,20 +646,29 @@ def wallet_view(request):
 
 
 def filter_product(request):    
-  
-    categories = request.GET.getlist('category[]')
-    
-    
-    products = Product.objects.filter(status=True).order_by('-id').distinct()
-    
-    
-
-    if len(categories) > 0:
-        products = products.filter(category__cid__in=categories).distinct()
+    try:
+        categories = request.GET.getlist('category[]')
+        print("Selected Categories:", categories)
         
 
-    data = render_to_string('mart/product-list.html', {"products": products})
-    return JsonResponse({"data": data})
+        min_price= request.GET['min_price']
+        max_price= request.GET['max_price'] 
+
+        products = Product.objects.filter(status=True).order_by('-id').distinct()
+        
+        products=products.filter(price__gte=min_price)
+        products=products.filter(price__lte=max_price)
+        print("All Products:", products)
+        print("Selected Categories:", categories)
+
+        if len(categories) > 0:
+            products = products.filter(category__cid__in=categories).distinct()
+            print("Filtered Product :", products)
+
+        data = render_to_string('mart/product-list.html', {"products": products})
+        return JsonResponse({"data": data})
+    except Exception as e:
+        return JsonResponse({"error": str(e)})
     
 
     
