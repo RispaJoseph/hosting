@@ -269,30 +269,32 @@ def admin_add_product(request):
     
 #     return render(request, 'admintemp/admin_products_details.html', context)
 
+########################################################################
+# @login_required(login_url='appadmin:admin_login')
+# def admin_update_product(request, pid):
+#     # Retrieve the product instance using its ID (pid)
+#     product = get_object_or_404(Product, pid=pid)
+#     print(product)
 
-@login_required(login_url='appadmin:admin_login')
-def admin_update_product(request, pid):
-    # Retrieve the product instance using its ID (pid)
-    product = get_object_or_404(Product, pid=pid)
-    print("Hello")
-
-    if request.method == "POST":
-        print("hello")
-        # Bind the product instance to the form and update it with the POST data
-        form = CreateProductForm(request.POST,request.FILES, instance=product)
-        title=form.cleaned_data['title']
-        print(title)
-        print(pid)
-        if form.is_valid():
-            form.save()
-            # Redirect to the product details or any other desired page after successful update
-            return redirect('appadmin:admin_products_list')
-    else:
-        # If it's a GET request, create a form instance populated with the product data
-        form = CreateProductForm(instance=product)
+#     if request.method == "POST":
+#         print("request.POST")
+#         # Bind the product instance to the form and update it with the POST data
+#         form = CreateProductForm(request.POST,request.FILES, instance=product)
+#         title=form.cleaned_data['title']
+#         print(title)
+#         print(pid)
+#         if form.is_valid():
+#             form.save()
+#             # Redirect to the product details or any other desired page after successful update
+#             return redirect('appadmin:admin_products_list')
+#         else:
+#             print(form.errors)
+#     else:
+#         # If it's a GET request, create a form instance populated with the product data
+#         form = CreateProductForm(instance=product)
     
-    return render(request, 'admintemp/admin_products_details.html', {'form': form, 'product': product})
-
+#     return render(request, 'admintemp/admin_products_details.html', {'form': form, 'product': product})
+##############################################################################################################
 
 
 
@@ -319,6 +321,7 @@ def delete_product(request,pid):
         return redirect('appadmin:admin_products_list')
     except Product.DoesNotExist:
         return HttpResponse("Product not found", status=404)
+
 
 
 @login_required(login_url='appadmin:admin_login')
@@ -356,6 +359,10 @@ def admin_products_details(request, pid):
         
     }
     return render(request, 'admintemp/admin_products_details.html', context)
+
+
+
+
 
 
 @login_required(login_url='appadmin:admin_login')
