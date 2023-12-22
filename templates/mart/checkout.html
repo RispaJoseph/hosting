@@ -44,7 +44,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-lg-6">
+
+
+
+                    <!-- <div class="row">
+                    <div class="col-lg-6">
                         <div class="toggle_info">
                             <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
                         </div>
@@ -61,7 +65,9 @@
                                 </form>
                             </div>
                         </div>
+                    </div>
                     </div> -->
+    
                 </div>
                 <div class="row">
                     <!-- <div class="col-12">
@@ -659,9 +665,68 @@
                             </div> -->
                         </form>
                         <a href="{% url 'appmart:dashboard' %}">Ship to different address</a>
+
+                        <div class="col-12">
+                        <div class="toggle_info">
+                            <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
+                        </div>
+                        <!-- <div class="panel-collapse collapse coupon_form " id="coupon">
+                            <div class="panel-body">
+                                <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
+                                <form action="{% url 'appmart:checkout' %}"  method="post"  id="coupon-form">
+                                    {% csrf_token %}
+                                    {{ coupon_form.code}}
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Enter Coupon Code...">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn  btn-md" name="login">Apply Coupon</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div> -->
+
+                        <div class="panel-collapse collapse coupon_form" id="coupon">
+                            <div class="panel-body">
+                                <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
+                                <form action="{% url 'appmart:checkout' %}" method="post" id="coupon-form">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        {{ coupon_form.code }}
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-md" name="login">Apply Coupon</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                    </div>
                     </div>
                     
-                       
+                    
+                    <!-- <div class="col-lg-6">
+                        <div class="toggle_info">
+                            <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
+                        </div>
+                        <div class="panel-collapse collapse coupon_form " id="coupon">
+                            <div class="panel-body">
+                                <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
+                                <form method="post">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Enter Coupon Code...">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn  btn-md" name="login">Apply Coupon</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    
+
+
                     
                     
                     <div class="col-md-6">
@@ -692,8 +757,23 @@
                                         {% endfor %}
                                         <tr>
                                             <th>SubTotal</th>
-                                            <td class="product-subtotal" colspan="2">${{ cart_total_amount|floatformat:2 }}</td>
+                                            <!-- <td class="product-subtotal" colspan="2">${{ money|floatformat:2 }}</td>
+                                             -->
+                                             <div id="cart_total">
+                                             {% if money != 0  %}
+                                             <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">{{money|floatformat:2}}</span></td>
+                                             {% else %}
+                                             <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">{{cart_total_amount|floatformat:2}}</span></td>
+                                             {% endif %}
+                                            </div>
                                         </tr>
+                                            {% if final_money != 0 %}
+                                            <tr>
+                                                <th>Coupon Discount</th>
+                                                <td colspan="2"><em>-${{ final_money|floatformat:0 }}</em></td>
+                                                
+                                            </tr>
+                                            {% endif %}
                                         <tr>
                                             <th>Shipping</th>
                                             <td colspan="2"><em>Free Shipping</em></td>

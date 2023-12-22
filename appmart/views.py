@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model, wallet
+from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model, wallet, Coupon
 from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
@@ -15,6 +15,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.utils import timezone
 from django.core import serializers
 from decimal import Decimal
+from appadmin.forms import CouponForm
 
 # Create your views here.
 
@@ -215,6 +216,8 @@ def checkout_view(request):
 
     cart_total_amount = 0
     total_amount = 0
+    final_money = 0
+    money = 0 
 
     #checking if cart_data_obj session exists
     if 'cart_data_obj' in request.session:
@@ -246,6 +249,37 @@ def checkout_view(request):
                 
             )
 
+            # coupon
+            if request.method == 'POST':
+                coupon_form = CouponForm(request.POST)  # Instantiate the coupon form with the POST data
+
+                if coupon_form.is_valid():
+                    coupon_code = coupon_form.cleaned_data['code']
+                    print(coupon_code)
+                    
+                    try:
+                        # Assuming you have a Coupon model
+                        coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
+                        
+                        # Check if the coupon is within its active and expiry dates
+                        current_date = timezone.now().date()
+                        if current_date < coupon.active_date or current_date > coupon.expiry_date:
+                            messages.warning(request, 'Invalid coupon code or expired')
+                        else:
+                            # Apply the coupon discount to the cart total
+                            money=cart_total_amount
+                            cart_total_amount -= (cart_total_amount* coupon.discount) / 100
+                            request.session['applied_coupon'] = cart_total_amount
+                            final_money=money-cart_total_amount
+                            print(final_money)
+                            messages.success(request, f'Coupon "{coupon.code}" applied successfully')
+
+                    except Coupon.DoesNotExist:
+                        messages.warning(request, 'Invalid coupon code')
+            else:
+                coupon_form = CouponForm()
+            # coupon end
+
 
     host = request.get_host()
     paypal_dict = {
@@ -272,7 +306,7 @@ def checkout_view(request):
         messages.warning(request, "There are multiple addresses, only one should be Activated")
         # active_address = None
         return redirect('appmart:dashboard')
-    return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button, "active_address":active_address})
+    return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button, "active_address":active_address, "coupon_form":coupon_form,"final_money":final_money, "money":money})
 
     
 

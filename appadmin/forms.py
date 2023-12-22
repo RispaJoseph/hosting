@@ -26,3 +26,8 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['title', 'image'] 
+
+
+
+class CouponForm(forms.Form):
+    code = forms.CharField(max_length=50)
