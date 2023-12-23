@@ -38,10 +38,12 @@ def dashboard(request):
      
      product_count = Product.objects.count()
      category_count = Category.objects.count()
+     order_count = CartOrder.objects.count()
 
      context = {
           'product_count':product_count,
-          'category_count':category_count
+          'category_count':category_count,
+          'order_count':order_count
      }
 
      return render(request, 'admintemp/admin_index.html',context)

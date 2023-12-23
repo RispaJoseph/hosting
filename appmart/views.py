@@ -34,12 +34,13 @@ def index(request):
     products = Product.objects.filter(featured = True, status = True).exclude(category__in=category_block)
     latest = Product.objects.all().order_by("-id")[:10]
     category = Category.objects.filter(is_blocked=False)
+    
 
     
     context = {
         "products":products,
         "latest":latest,
-        "category":category
+        "category":category,
     }
     return render(request, 'mart/index.html',context)
 
@@ -303,7 +304,7 @@ def checkout_view(request):
     try:
         active_address = Address.objects.get(user=request.user, status=True)
     except Address.DoesNotExist:
-        messages.warning(request, "There are multiple addresses, only one should be Activated")
+        messages.warning(request, "Activated or Add your address")
         # active_address = None
         return redirect('appmart:dashboard')
     return render(request, "mart/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'paypal_payment_button': paypal_payment_button, "active_address":active_address, "coupon_form":coupon_form,"final_money":final_money, "money":money})
