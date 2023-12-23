@@ -283,9 +283,19 @@
                                         SubTotal
                                     </div>
                                     <div class="col-5">
-                                        <span class="text-120 text-secondary-d1">${{ cart_total_amount|floatformat:2 }}</span>
+                                        <span class="text-120 text-secondary-d1">${{ total_amount|floatformat:2 }}</span>
                                     </div>
                                 </div>
+                                {% if discount != 0 %}
+                                <div class="row my-2">   
+                                <div class="col-7 text-right">
+                                    Coupon Discount
+                                </div>
+                                <div class="col-5">
+                                    <span class="text-120 text-secondary-d1">-${{ discount|floatformat:2 }}</span>
+                                </div>
+                            </div> 
+                                {%endif%}
 
                                 <div class="row my-2">
                                     <div class="col-7 text-right">

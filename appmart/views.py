@@ -219,6 +219,7 @@ def checkout_view(request):
     total_amount = 0
     final_money = 0
     money = 0 
+    
 
     #checking if cart_data_obj session exists
     if 'cart_data_obj' in request.session:
@@ -268,7 +269,7 @@ def checkout_view(request):
                             messages.warning(request, 'Invalid coupon code or expired')
                         else:
                             # Apply the coupon discount to the cart total
-                            money=cart_total_amount
+                            money=total_amount
                             cart_total_amount -= (cart_total_amount* coupon.discount) / 100
                             request.session['applied_coupon'] = cart_total_amount
                             final_money=money-cart_total_amount
@@ -448,6 +449,7 @@ def cod(request):
 @login_required
 def payment_completed_view(request):
     cart_total_amount = 0
+    total_amount=0
 # stock count mgt
     if 'cart_data_obj' in request.session:
         cart_data = request.session['cart_data_obj']
@@ -467,10 +469,24 @@ def payment_completed_view(request):
 
     current_time = timezone.now().date()
     if 'cart_data_obj' in request.session:
+
+        applied_coupon = request.session.get('applied_coupon',None)
+        if applied_coupon is not None:
+            cart_total_amount = applied_coupon
+            
+            del request.session['applied_coupon']
+        else:
+            cart_total_amount = 0
+            for p_id, item in request.session['cart_data_obj'].items():
+                cart_total_amount += int(item['qty']) * float(item['price'])
+
+    if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
-            cart_total_amount += int(item['qty']) * float(item['price'])
+                total_amount += int(item['qty']) * float(item['price'])
+                discount = total_amount-cart_total_amount
+        
         del request.session['cart_data_obj']
-    return render(request, 'mart/payment_completed.html', {"cart_data": cart_data, 'totalcartitems': len(cart_data), 'cart_total_amount': cart_total_amount, 'current_time': current_time, })
+    return render(request, 'mart/payment_completed.html', {"cart_data": cart_data, 'totalcartitems': len(cart_data), 'cart_total_amount': cart_total_amount, 'current_time': current_time,'total_amount':total_amount,'discount':discount })
 
                                                            
 
@@ -618,22 +634,29 @@ def wallet_view(request):
     if 'cart_data_obj' in request.session:
         cart_data = request.session['cart_data_obj']
         print(cart_data)
+        applied_coupon = request.session.get('applied_coupon',None)
+        if applied_coupon is not None:
+            total_amount = applied_coupon
+            
+            del request.session['applied_coupon']
+
+        else:
+            total_amount = 0
+            for p_id, item in cart_data.items():
+                # try:
+                #     # Split the price string into individual prices and convert to float
+                #     prices = [float(price) for price in item.get('price', '').split()]
+                #     # Sum up the individual prices
+                #     total_price = sum(prices)
+                #     qty = int(item.get('qty', 0))
+                #     total_amount += qty * total_price
+                # except (ValueError, TypeError):
+                #     # Handle conversion errors if qty or total_price is not a valid number
+                #     pass
 
 
-        for p_id, item in cart_data.items():
-            # try:
-            #     # Split the price string into individual prices and convert to float
-            #     prices = [float(price) for price in item.get('price', '').split()]
-            #     # Sum up the individual prices
-            #     total_price = sum(prices)
-            #     qty = int(item.get('qty', 0))
-            #     total_amount += qty * total_price
-            # except (ValueError, TypeError):
-            #     # Handle conversion errors if qty or total_price is not a valid number
-            #     pass
-
-            for p_id, item in request.session['cart_data_obj'].items():
-                total_amount += int(item['qty']) * float(item['price'])
+                for p_id, item in request.session['cart_data_obj'].items():
+                    total_amount += int(item['qty']) * float(item['price'])
 
         total_amount_decimal = Decimal(str(total_amount))
 
