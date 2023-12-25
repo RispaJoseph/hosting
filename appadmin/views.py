@@ -8,7 +8,14 @@ from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from appmart.models import *
 from decimal import Decimal
+import calendar
+from django.db.models.functions import ExtractMonth
+from django.db.models import Count, Avg
+from datetime import datetime,timedelta
+from django.utils import timezone
+from django.utils.timezone import make_aware
 
+from django.db.models.functions import TruncMonth, TruncYear
 
 # Create your views here.
 
@@ -31,6 +38,10 @@ def admin_logout(request):
     messages.success(request,f'You logged out')
     return redirect('appadmin:admin_login') 
 
+
+
+
+
 @login_required(login_url='appadmin:admin_login')
 def dashboard(request):
      if not request.user.is_superadmin:
@@ -39,11 +50,97 @@ def dashboard(request):
      product_count = Product.objects.count()
      category_count = Category.objects.count()
      order_count = CartOrder.objects.count()
+    #  orders_list = CartOrder.objects.filter(user=request.user).order_by("-id")
+    #  orders = CartOrder.objects.annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
+    #  month = []
+    #  total_orders = []
+
+    #  for i in orders:
+    #      month.append(calendar.month_name[i["month"]])
+    #      total_orders.append(i["count"])
+
+     orders = CartOrder.objects.all()
+     last_orders = CartOrder.objects.order_by('-order_date')[:5]
+     orders_count = orders.count()
+     total_users_count = User.objects.count()
+     total = 0
+
+     for order in orders:
+         if order.product_status == 'Delivered':
+             total += order.price  
+         if order.paid_status:
+             total += order.price  
+     revenue=int(total)
+     end_date = datetime.now()
+     start_date = end_date - timedelta(days=7)
+
+     daily_order_counts = (
+         CartOrder.objects
+         .filter(order_date__range=(start_date, end_date), paid_status=True)
+         .values('order_date')
+         .annotate(order_count=Count('id'))
+         .order_by('order_date')
+     )
+
+     dates = [entry['order_date'].strftime('%Y-%m-%d') for entry in daily_order_counts]
+     counts = [entry['order_count'] for entry in daily_order_counts]
+   
+    
+     monthly_order_counts = (
+         CartOrder.objects
+         .filter(order_date__year=datetime.now().year, paid_status=True)  # Filter by current year and paid orders
+         .annotate(month=TruncMonth('order_date'))
+         .values('month')
+         .annotate(order_count=Count('id'))
+         .order_by('month')
+     )
+
+     monthly_dates = [entry['month'].strftime('%Y-%m') for entry in monthly_order_counts]
+     monthly_counts = [entry['order_count'] for entry in monthly_order_counts]
+
+     # Fetch yearly order counts and their respective dates
+     yearly_order_counts = (
+         CartOrder.objects
+         .annotate(year=TruncYear('order_date'))
+         .values('year')
+         .annotate(order_count=Count('id'))
+         .order_by('year')
+     )
+
+     yearly_dates = [entry['year'].strftime('%Y') for entry in yearly_order_counts]
+     yearly_counts = [entry['order_count'] for entry in yearly_order_counts]
+
+     # statuses = ['Delivered', 'Processing', 'Cancelled', 'Return','Shipped']
+     # order_counts = [CartOrder.objects.filter(product_status=status).count() for status in statuses]
+     statuses = ['Delivered', 'Processing', 'Cancelled', 'Return', 'Shipped']
+
+     order_counts = (
+         CartOrder.objects
+         .filter(product_status__in=statuses)
+         .values('product_status')
+         .annotate(count=Count('id'))
+         .order_by('product_status')
+     )
+     status_list = [entry['product_status'] for entry in order_counts]
+     count_list = [entry['count'] for entry in order_counts]
+
 
      context = {
           'product_count':product_count,
           'category_count':category_count,
-          'order_count':order_count
+          'order_count':order_count,
+          'dates':dates,
+          'counts':counts,
+          'monthlyDates':monthly_dates,
+          'monthlyCounts':monthly_counts,
+          'yearlyDates':yearly_dates,
+          'yearlyCounts':yearly_counts,
+          'last_orders':last_orders,
+          'revenue':revenue,
+          'total_users_count':total_users_count,
+          'status_list':status_list,
+          'count_list':count_list
+
      }
 
      return render(request, 'admintemp/admin_index.html',context)
