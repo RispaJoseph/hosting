@@ -137,6 +137,12 @@ def shop_cart_view(request):
         for p_id, item in request.session['cart_data_obj'].items():
             quantity = int(item.get('qty', 0))  # Default quantity to 0 if not present
             price = item.get('price', '')
+
+            coupon = Coupon.objects.filter(active=True)
+            print(coupon)
+            content = {
+                "coupon":coupon,
+            }
             
             # products = Product.objects.get(pid = p_id)
                   # Default price to empty string if not present
@@ -150,7 +156,7 @@ def shop_cart_view(request):
                 # Log the error, skip the item, or handle it according to your app's logic
                 pass
 
-        return render(request, "mart/shop-cart.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount})
+        return render(request, "mart/shop-cart.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'coupon':coupon})
     else:
         messages.warning(request, "Your cart is empty")
         return redirect("appmart:index")

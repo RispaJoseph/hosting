@@ -1,4 +1,6 @@
-  
+{% extends 'partial/base.html' %}
+{% load static %}
+{% block content %} 
     <main class="main" id="cart-list">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
@@ -60,7 +62,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="cart-action text-end">
+                        <!-- <div class="cart-action text-end">
                             <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a>
                             <a class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
                         </div>
@@ -107,7 +109,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <div class="mb-30 mt-50">
+                                <div class="mb-30 mt-50"> -->
                                     <!-- <div class="heading_s1 mb-3">
                                         <h4>Apply Coupon</h4>
                                     </div> -->
@@ -127,6 +129,31 @@
                                             </div>
                                         </div>
                                     </div> -->
+
+
+
+                                    <div class="mb-30 mt-50">
+                                        <div class="heading_s1 mb-3">
+                                            <h4>Available Coupons</h4>
+                                        </div>
+                                        <div class="row">
+                                            {% for c in coupon %}
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="card border-primary">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title coupon-code text-primary">{{ c.code }}</h5>
+                                                            <p class="card-text">Discount: {{ c.discount }}%</p>
+                                                            <p class="card-text">Expires: {{ c.expiry_date }}</p>
+                                                            <p class="card-text text-success">CODE: {{ c.code }}</p>
+                                                            <!-- <button class="btn btn-primary copy-coupon-button" onclick="copyCouponCode('{{ c.code }}')">Copy</button> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12">
@@ -161,4 +188,9 @@
             </div>
         </section>
     </main>
+    {% endblock %}
+
+
+
     
+      

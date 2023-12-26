@@ -112,25 +112,62 @@
                                 <div class="mb-30 mt-50">
                                     <!-- <div class="heading_s1 mb-3">
                                         <h4>Apply Coupon</h4>
-                                    </div> -->
-                                    <!-- <div class="total-amount">
+                                    </div>  -->
+                                    <div class="total-amount">
                                         <div class="left">
                                             <div class="coupon">
-                                                <form action="#" target="_blank">
+                                                <form action="#" target="">
                                                     <div class="form-row row justify-content-center">
-                                                        <div class="form-group col-lg-6">
-                                                            <input class="font-medium" name="Coupon" placeholder="Enter Your Coupon">
+                                                        <div class="form-group">
+                                                            <!-- <input class="font-medium" name="Coupon" placeholder="Enter Your Coupon"> -->
+                                                            <!-- <p style="color: royalblue;">Apply any Coupon to get offer</p><br>
+                                                             <div class=""><p style="color: rgb(10, 59, 196);">FURNIMART20</p></div>
+                                                            <br>
+                                                            <div><p style="color: rgb(10, 59, 196);">FURNIMART50</p></div>  -->
+                                                            <!-- {% for c in coupon %}
+                                                                <div class="text-success font-weight-bold">{{ c.code }}</div>
+                                                            {% endfor %} -->
+
+                                                            <div class="mb-30 mt-50">
+                                                                <div class="heading_s1 mb-3">
+                                                                    <h4>Available Coupons</h4>
+                                                                </div>
+                                                                <div class="row">
+                                                                    {% for c in coupon %}
+                                                                        <div class="col-lg-4 mb-3">
+                                                                            <div class="card border-primary">
+                                                                                <div class="card-body">
+                                                                                    <h5 class="card-title coupon-code text-primary">{{ coupon.code }}</h5>
+                                                                                    <p class="card-text">Discount: {{ c.discount }}%</p>
+                                                                                    <p class="card-text">Expires: {{ c.expiry_date }}</p>
+                                                                                    <p class="card-text text-success">CODE: {{ c.code }}</p>
+
+                                                                                    <!-- <button class="btn btn-primary copy-coupon-button">Copy</button> -->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+
+
+
+
                                                         </div>
-                                                        <div class="form-group col-lg-6">
+                                                        <!-- <div class="form-group col-lg-6">
                                                             <button class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</button>
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
-                                    </div> -->
+                                    </div> 
                                 </div>
                             </div>
+                            
+
+
+
                             <div class="col-lg-6 col-md-12">
                                 <div class="border p-md-4 p-30 border-radius cart-totals">
                                     <div class="heading_s1 mb-3">

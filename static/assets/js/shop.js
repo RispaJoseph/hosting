@@ -556,3 +556,122 @@ $(document).ready(function (){
 })    
  
 
+
+
+// function copyToClipboard(text) {
+//   navigator.clipboard.writeText(text).then(() => {
+//       Swal.fire({
+//           position: 'center',
+//           icon: 'success',
+//           title: "Coupon Code copied to Clipboard",
+//           showConfirmButton: false,
+//           timer: 1500
+//       });
+//   }).catch(err => {
+//       console.error('Unable to copy to clipboard', err);
+//       // Handle error
+//       Swal.fire({
+//           position: 'center',
+//           icon: 'error',
+//           title: "Failed to copy Coupon Code",
+//           showConfirmButton: false,
+//           timer: 1500
+//       });
+//   });
+// }
+
+
+
+
+
+// function copyToClipboard(code) {
+//   navigator.clipboard.writeText(code).then(()=> {
+//       Swal.fire({
+//       position: 'center',
+//       icon: 'success',
+//       title: "Coupon Code copied to Clipboard",
+//       showConfirmButton: false,
+//       timer: 1500
+//       });
+//   }).catch(err=>{
+//       console.error('Unable to copy to clipboard', error);
+//    });
+//         }
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+//   // Get all elements with the class 'copy-coupon-button'
+//   var copyButtons = document.querySelectorAll('.copy-coupon-button');
+
+//   // Loop through each button and attach a click event listener
+//   copyButtons.forEach(function (button) {
+//       button.addEventListener('click', function () {
+//           // Find the sibling with the class 'coupon-code' to get the coupon code
+//           var couponCodeElement = button.parentElement.querySelector('.coupon-code');
+
+//           // Create a temporary input element
+//           var tempInput = document.createElement('input');
+
+//           // Set the value of the input to the coupon code
+//           tempInput.value = couponCodeElement.innerText;
+
+//           // Append the input to the body
+//           document.body.appendChild(tempInput);
+
+//           // Select the input's content
+//           tempInput.select();
+
+//           // Copy the selected content
+//           document.execCommand('copy');
+
+//           // Remove the temporary input element
+//           document.body.removeChild(tempInput);
+
+//           // Optionally, you can provide visual feedback to the user (e.g., show a tooltip)
+//           // For example, using Bootstrap's tooltip:
+//           var tooltip = new bootstrap.Tooltip(button, {
+//               title: 'Copied!',
+//               trigger: 'manual',
+//               placement: 'top'
+//           });
+
+//           // Show the tooltip
+//           tooltip.show();
+
+//           // Hide the tooltip after a brief delay
+//           setTimeout(function () {
+//               tooltip.hide();
+//           }, 1000);
+//       });
+//   });
+// });
+
+
+
+
+
+function copyCouponCode(code) {
+  // Create a temporary textarea element
+  const textarea = document.createElement('textarea');
+  textarea.value = code; // Set the value to the coupon code
+  document.body.appendChild(textarea); // Append the textarea to the DOM
+
+  // Select and copy the code
+  textarea.select();
+  document.execCommand('copy');
+
+  // Remove the textarea from the DOM
+  document.body.removeChild(textarea);
+
+  // Show a success message or perform any other action
+  alert('Coupon code copied to clipboard: ' + code);
+}
+
+
+
+
+
