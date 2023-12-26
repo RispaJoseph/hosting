@@ -252,8 +252,16 @@
                                             <span class="old-price">{{p.old_price}}</span>
                                         </div>
                                         <div class="product-action-1 show">
-                                            <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
-                                            <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
+                                            <input type="hidden" value="1" name="product-quantity" class="product-quantity-{{ p.id }}">
+                                            <input type="hidden" class="product-pid-{{ p.id }}" value="{{ p.pid }}">
+                                            <input type="hidden" class="product-image-{{ p.id }}" value="{{ p.image.url }}">
+                                            <input type="hidden" class="product-id-{{ p.id }}" value="{{ p.id }}">
+                                            <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.title }}">
+                                            <ins><span class="current-product-price-{{p.id}}" id="current-product-price" style="display: none;">{{p.price}}</span></ins>
+                                            <!-- <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a> -->
+                                            <button class="add-to-cart-btn" data-index="{{ p.id }}" id="add-to-cart-btn" ><i class="fi-rs-shopping-cart mr-5"></i></button>
+
+                                            <button  class="add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
 
                                         </div>
                                     </div>

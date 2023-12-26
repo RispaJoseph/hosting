@@ -31,7 +31,9 @@
         <span class="old-price">{{ p.old_price }}</span>
       </div>
       <div class="product-action-1 show">
-        <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+        <!-- <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a> -->
+        <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border:none;"id="add-to-cart-btn" ><i class="fi-rs-shopping-cart mr-5"></i>Add</button>
+
       </div>
     </div>
   </div>

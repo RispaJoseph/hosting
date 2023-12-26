@@ -115,7 +115,7 @@
                                               {% if product.stock == 0 %}
                                               <button type="submit" class="button button-add-to-cart" disabled>Out Of Stock</button>
                                                 {% else %}
-                                               <button type="submit" class="button add-to-cart" id="add-to-cart-btn" data-index="{{product.id}}">Add to cart</button>
+                                               <button type="submit" class="button add-to-cart-btn" id="add-to-cart-btn" data-index="{{product.id}}">Add to cart</button>
                                                {% endif %}
 
                                                <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{product.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>

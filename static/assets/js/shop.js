@@ -120,7 +120,7 @@
 
 
 
-$("#add-to-cart-btn").on("click", function () {
+$(".add-to-cart-btn").on("click", function () {
   let this_val = $(this);
   let index = this_val.attr("data-index");
   let quantity = $(".product-quantity-" + index).val();

@@ -132,14 +132,14 @@ def add_to_cart(request):
 
 def shop_cart_view(request):
     cart_total_amount = 0
-
+    coupon=""
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
             quantity = int(item.get('qty', 0))  # Default quantity to 0 if not present
             price = item.get('price', '')
 
             coupon = Coupon.objects.filter(active=True)
-            print(coupon)
+            
             content = {
                 "coupon":coupon,
             }
