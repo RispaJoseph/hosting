@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate,login,logout
 from appadmin.forms import CreateProductForm, CategoryForm
+
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
@@ -713,3 +714,64 @@ def delete_coupon(request,id):
     messages.warning(request,"Coupon has been deleted successfully")
 
     return redirect('appadmin:admin-coupon')
+
+
+
+# def sales_report(request):
+#     return render(request,'admintemp/sales_report.html')
+
+
+
+def sales_report(request):
+    if not request.user.is_superadmin:
+        return redirect('appadmin:admin_login')
+    start_date_value = ""
+    end_date_value = ""
+    orders = CartOrder.objects.filter(product_status='delivered').order_by('-order_date')
+
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        start_date_value = start_date
+        end_date_value = end_date
+
+        if start_date and end_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+            
+            orders = CartOrder.objects.filter(order_date__range=(start_date, end_date), product_status='delivered').order_by('-order_date')
+            print(orders)
+            print("hello")
+
+    context = {
+        'orders': orders,
+        'start_date_value': start_date_value,
+        'end_date_value': end_date_value
+    }
+
+    return render(request, 'admintemp/sales_report.html', context)
+
+
+# ............Processing, Shipped, Delivered, Cancelled..............................
+
+@login_required(login_url='appadmin:admin_login')   
+def update_product_status(request, id):
+    if not request.user.is_superadmin:
+        return redirect('appadmin:admin_login')
+    if request.method == 'POST':
+        new_status = request.POST.get('product_status')
+        order = get_object_or_404(CartOrder, id=id)
+        order.product_status = new_status
+        order.save()
+        
+        products = CartOrderProducts.objects.filter(order=order)
+        for p in products:
+            productss = Product.objects.filter(title=p.item)
+            for s in productss:
+                s.stock = int(s.stock) + p.qty
+                s.save()
+        
+
+    # Redirect back to the original page or a specific URL
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
