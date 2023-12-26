@@ -117,6 +117,12 @@ def add_to_cart(request):
     if product_id in cart_data:
         # If the product already exists in the cart, update its quantity
         cart_data[product_id]['qty'] += cart_product['qty']
+
+        return JsonResponse({
+            "message": "Product already in cart",
+            'totalcartitems': len(request.session['cart_data_obj']),
+            'already_in_cart': True
+        })
     else:
         # If the product is new, add it to the cart data
         cart_data[product_id] = cart_product
@@ -124,7 +130,7 @@ def add_to_cart(request):
     # Update the session with the modified cart data
     request.session['cart_data_obj'] = cart_data
 
-    return JsonResponse({"data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj'])})
+    return JsonResponse({"data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'already_in_cart': False, "message": "Product added to cart"})
 
 
 
