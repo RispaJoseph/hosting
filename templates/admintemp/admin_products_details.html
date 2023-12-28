@@ -50,6 +50,7 @@
                                 <div class="mb-4">
                                     <label for="{{form.product_stock.id_for_label}}" class="form-label">Stock</label>
                                     {{form.stock}}
+                                    {{ form.stock.errors }}
                                 </div>
                             </div>
                         </div>
@@ -63,6 +64,7 @@
                                     <label for="{{ form.max_price.id_for_label }}" class="form-label">Max price</label>
                                     <div class="row gx-2">
                                         {{form.old_price}}
+                                        {{ form.old_price.errors}}
                                     </div>
                                 </div>
                             </div>
@@ -70,6 +72,7 @@
                                 <div class="mb-4">
                                     <label for="{{form.sale_price.id_for_label}}" class="form-label">Sale price</label>
                                     {{form.price}}
+                                    {{ form.price.errors}}
                                 </div>
                             </div>
                         </div>

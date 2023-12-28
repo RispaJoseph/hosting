@@ -9,6 +9,11 @@
             <h2 class="content-title card-title">Products List</h2>
             
         </div>
+        <div class="alert alert-danger"> 
+            {% for msg in messages %}
+            {{ msg }}
+            {% endfor %}
+        </div>
         <div>
 
             <a href="{% url 'appadmin:admin_add_product'%}" class="btn btn-primary btn-sm rounded">Create new</a>

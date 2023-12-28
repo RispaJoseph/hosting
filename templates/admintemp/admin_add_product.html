@@ -18,6 +18,8 @@
                 <div class="card-header">
                     <h4>Product Details</h4>
                 </div>
+                
+                
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -37,26 +39,29 @@
                                 <div class="mb-4">
                                     <label for="{{form.stock_count.id_for_label}}" class="form-label">Stock Count </label>
                                     <input placeholder="" type="text" class="form-control" name="stock_count" required="True" min="0" value="{{ form_data.stock_count }}">
+                                    {% if form_data.stock_count == 0 %}
+                                        <span>Out of Stock</span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="mb-4">
                             <label for="{{form.description.id_for_label}}" class="form-label">Description</label>
-                            <textarea placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                            <textarea placeholder="Type here" class="form-control" required="True" rows="4" name="description"></textarea>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="{{form.old_price.id_for_label}}" class="form-label">Max price</label>
                                     <div class="row gx-2">
-                                        <input placeholder="$" type="text" class="form-control" name="old_price" required="True">
+                                        <input placeholder="$" type="number" class="form-control" name="old_price" required="True">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="{{form.price.id_for_label}}" class="form-label">price</label>
-                                    <input placeholder="$" type="text" class="form-control" name="price" required="True">
+                                    <input placeholder="$" type="number" class="form-control" name="price" required="True">
                                 </div>
                             </div>
                         </div>  

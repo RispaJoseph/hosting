@@ -267,7 +267,7 @@ def admin_add_product(request):
     if not request.user.is_authenticated:
         return HttpResponse("Unauthorized", status=401)
     categories = Category.objects.all()
-   
+    
 
     if request.method == 'POST':
         product_name= request.POST.get('title')
@@ -277,9 +277,32 @@ def admin_add_product(request):
         sale_price= request.POST.get('price')
         category_name= request.POST.get('category')
        
-       
+
+        
+        try:
+            product_stock = int(product_stock)
+            if product_stock < 0:
+                messages.warning(request,"Stock Count can't be less than Zero")
+                return redirect('appadmin:admin_products_list')
+            
+            max_price = float(max_price)
+            if max_price < 0:
+                messages.warning(request,"Max Price can't be less than Zero")
+                return redirect('appadmin:admin_products_list')
+
+            sale_price = float(sale_price)
+            if sale_price < 0:
+                messages.warning(request,"Price can't be less than Zero")
+                return redirect('appadmin:admin_products_list')
+        except ValueError as e:
+            messages.warning(request,str(e))
+            return redirect('appadmin:admin_products_list')
+
+
 
         category = get_object_or_404(Category, title=category_name)
+
+
         
 
         product = Product(
@@ -300,7 +323,8 @@ def admin_add_product(request):
     content = {
         'categories': categories,
           
-        'form': form
+        'form': form,
+        
     }
     return render(request,'admintemp/admin_add_product.html', content)
 
@@ -427,7 +451,7 @@ def delete_product(request,pid):
 @login_required(login_url='appadmin:admin_login')
 def admin_products_details(request, pid):
     print(pid)
-    if not request.user.is_authenticated:
+    if not request.user.is_superadmin:
         return redirect('appadmin:admin_login')
 
     try:

@@ -240,6 +240,13 @@ def checkout_view(request):
         # getting total amount for Paypal amount
         for p_id, item in request.session['cart_data_obj'].items():
             total_amount += int(item['qty']) * float(item['price'])
+            products=Product.objects.filter(title=item['title'])
+            for p in products:
+                if int(p.stock) < int(item['qty']):
+                    messages.warning(request,f"{item['qty']} quantity not available")
+                    return redirect("appmart:shop_cart_view")
+
+
 
         # create order objects
         order = CartOrder.objects.create(
