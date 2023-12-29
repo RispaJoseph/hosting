@@ -2,6 +2,7 @@ from django.db import models
 from shortuuidfield import ShortUUIDField
 from django.utils.html import mark_safe
 from account.models import User
+from decimal import Decimal
 
 
 STATUS_CHOICE = (
@@ -203,3 +204,21 @@ class Coupon(models.Model):
   def __str__(self):
      return self.code
   
+
+
+# ......................Product Offer..........................
+
+class ProductOffer(models.Model):
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.discount_percentage}% Discount"
+
+    def save(self, *args, **kwargs):
+        # Ensure discount_percentage is Decimal type
+        if not isinstance(self.discount_percentage, Decimal):
+            self.discount_percentage = Decimal(str(self.discount_percentage))
+        super().save(*args, **kwargs)

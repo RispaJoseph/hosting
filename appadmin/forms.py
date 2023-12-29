@@ -1,9 +1,11 @@
 from django import forms
-from appmart.models import Product, Category
+from appmart.models import Product, Category, ProductOffer
 from appmart.models import ProductImages
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 from django.core.exceptions import ValidationError
+from django.forms.widgets import DateInput
+
 
 class CreateProductForm(forms.ModelForm):
     new_image = forms.ImageField(required=False)
@@ -56,3 +58,21 @@ class CategoryForm(forms.ModelForm):
 
 class CouponForm(forms.Form):
     code = forms.CharField(max_length=50)
+
+
+
+class ProductOfferForm(forms.ModelForm):
+    class Meta:
+        model = ProductOffer
+        fields = ['discount_percentage', 'start_date', 'end_date', 'active']
+        widgets = {
+            'start_date': DateInput(attrs={'type': 'date'}),
+            'end_date': DateInput(attrs={'type': 'date'}),
+        }
+
+    def clean_discount_percentage(self):
+        discount_percentage = self.cleaned_data['discount_percentage']
+        if not (0 <= discount_percentage <= 100):
+            raise forms.ValidationError('Discount percentage must be between 0 and 100.')
+        return discount_percentage
+    

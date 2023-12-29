@@ -47,6 +47,13 @@ urlpatterns = [
 
     path('update_product_status/<int:id>/', views.update_product_status, name='update_product_status'),
 
+
+
+    path('product_offers/', views.product_offers, name='product_offers'),
+    path('create_product_offer/', views.create_product_offer, name='create_product_offer'),
+    path('edit_product_offers/<int:id>/', views.edit_product_offers, name='edit_product_offers'),
+    path('delete_product_offer/<int:id>/', views.delete_product_offer, name='delete_product_offer'),
+
     
     # path('add_product/',views.add_product,name='add_product'),
     # path('logout/',views.logoutUser,name='logout'),

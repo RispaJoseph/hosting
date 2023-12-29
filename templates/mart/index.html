@@ -73,7 +73,7 @@
         
         <section class="product-tabs section-padding position-relative wow fadeIn animated">
             <div class="bg-square"></div>
-            <div class="container">
+            <div class="container"></div>
                 <div class="tab-header">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -102,9 +102,19 @@
                                             {% comment %} <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a> {% endcomment %}
                                             {% comment %} <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> {% endcomment %}
                                         </div>
-                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                        <!-- <div class="product-badges product-badges-position product-badges-mrg">
                                             <span class="hot">-{{p.get_percentage|floatformat:0}}%</span>
+                                        </div> -->
+
+                                        {% if discount_offer is not None and discount_offer.active %}
+                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                            <span class="hot">-{{ discount_offer.discount_percentage|floatformat:0 }}%</span>
                                         </div>
+                                        {% else %}
+                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                            <span class="hot">Hot</span>
+                                        </div>
+                                        {%endif%}
                                     </div>
                                     <div class="product-content-wrap">
                                         <div class="product-category">
@@ -116,11 +126,19 @@
                                                 <span>90%</span>
                                             </span>
                                         </div>
+                                        {% if discount_offer is not None and discount_offer.active %}
                                         <div class="product-price">
                                             <!-- <span class="current-product-price{{ p.pid }}">{{p.price}} </span> -->
                                             <ins><span class="current-product-price-{{p.id}}" id="current-product-price">{{p.price}}</span></ins>
                                             <span class="old-price">{{p.old_price}}</span>
+                                           
                                         </div>
+                                        {% else %}
+                                        <div class="product-price">
+                                            <span>$ <span class="current-product-price-{{p.id}}">{{p.price}}</span></span>
+                                            
+                                        </div>
+                                        {%endif%}
 
 
 

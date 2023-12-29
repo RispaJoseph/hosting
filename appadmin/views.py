@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse , get_object_or_404,
 from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate,login,logout
-from appadmin.forms import CreateProductForm, CategoryForm
+from appadmin.forms import CreateProductForm, CategoryForm, ProductOfferForm
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
@@ -799,3 +799,173 @@ def update_product_status(request, id):
 
     # Redirect back to the original page or a specific URL
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+# ...............................Product offer..................................................
+
+
+def product_offers(request):
+    offers=ProductOffer.objects.all()
+    try:
+        product_offer = ProductOffer.objects.get(active=True)
+        print(product_offer)
+    except ProductOffer.DoesNotExist:
+       
+        product_offer = None
+    
+    products = Product.objects.all()
+
+    for p in products:
+       
+        if product_offer:
+           
+            discounted_price = p.old_price - (p.old_price * product_offer.discount_percentage / 100)
+            p.price = max(discounted_price, Decimal('0.00'))  # Ensure the price is not negative
+        else:
+            
+            p.price = p.old_price
+
+        p.save()
+
+    
+    context={
+        'offers':offers
+    }
+    return render(request, 'admintemp/product_offer.html',context)
+
+
+
+def edit_product_offers(request, id):
+    if not request.user.is_superadmin:
+        return redirect('appadmin:admin_login')
+    
+    offer_discount = get_object_or_404(ProductOffer, id=id)
+    print(f'Active Date: {offer_discount.start_date}')
+
+    if request.method == 'POST':
+        discount = request.POST['discount']
+        active = request.POST.get('active') == 'on'
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+        
+        if end_date and start_date and end_date < start_date:
+            messages.error(request, 'Expiry date must not be less than the start date.')
+        else:
+            start_date = make_aware(datetime.strptime(start_date, '%Y-%m-%d'))
+            end_date = make_aware(datetime.strptime(end_date, '%Y-%m-%d'))
+
+            current_date = timezone.now()
+            if start_date and end_date and (current_date < start_date or current_date > end_date):
+                active = False
+                messages.error(request, 'Offer cannot be activated now. Check the start date.')
+
+           
+            if active:
+                ProductOffer.objects.exclude(id=offer_discount.id).update(active=False)
+
+            offer_discount.discount_percentage = discount or None
+            offer_discount.start_date = start_date or None
+            offer_discount.end_date = end_date or None
+            offer_discount.active = active
+            offer_discount.save()
+
+            messages.success(request, 'Offer Updated successfully')
+            return redirect('appadmin:product_offers')
+    
+    return render(request, 'admintemp/edit_product_offers.html', {'offer_discount': offer_discount})
+        
+            
+
+
+
+def create_product_offer(request):
+    if request.method == 'POST':
+        form = ProductOfferForm(request.POST)
+        if form.is_valid():
+            discount_percentage = form.cleaned_data['discount_percentage']
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            active = form.cleaned_data['active']
+            
+            if end_date and start_date and end_date < start_date:
+                messages.error(request, 'Expiry date must not be less than the start date.')
+            else:
+                
+                current_date = timezone.now()
+                if start_date and end_date and (current_date < start_date or current_date > end_date):
+                    active = False
+                    messages.error(request, 'Offer cannot be activated now. Check the start date.')
+
+                if active:
+                    ProductOffer.objects.update(active=False)
+
+            # Check if any of the fields are filled
+                if discount_percentage or start_date or end_date or active:
+               
+                    form.save()
+            
+            return redirect('appadmin:product_offers')  # Redirect to a view displaying the list of product offers
+    else:
+        form = ProductOfferForm()
+
+    return render(request, 'admintemp/create-product-offers.html', {'form': form})
+
+
+@login_required(login_url='appadmin:admin_login')        
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def delete_product_offer(request,id):
+    if not request.user.is_superadmin:
+        return redirect('appadmin:admin_login')
+    
+    try:
+        offer= get_object_or_404(ProductOffer, id=id)
+    except ValueError:
+        return redirect('appadmin:product_offers')
+    offer.delete()
+    messages.warning(request,"Offer has been deleted successfully")
+
+    return redirect('appadmin:product_offers')
+
+
+
+
+# Category Offers
+
+
+
+
+
+def category_offers(request):
+    offers = CategoryOffer.objects.all()
+    categories = Category.objects.all()
+
+    for category in categories:
+        try:
+            category_offer = CategoryOffer.objects.filter(category=category, active=True)
+            print(category_offer)
+        except CategoryOffer.DoesNotExist:
+            category_offer = None
+        products = Product.objects.filter(category=category, status=True)
+        print(products)
+        
+        for product in products:
+            if category_offer:
+                for cat in category_offer:
+            
+
+            
+                    discounted_price = product.old_price - (product.old_price * cat.discount_percentage / 100)
+                    product.price = max(discounted_price, Decimal('0.00'))  # Ensure the price is not negative
+                
+            else:
+                product.price=product.old_price
+            product.save()
+                
+
+    context = {
+        'offers': offers
+    }
+    return render(request, 'adminside/category_offers.html', context)

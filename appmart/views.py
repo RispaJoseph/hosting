@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model, wallet, Coupon
+from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model, wallet, Coupon, ProductOffer
 from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
@@ -16,6 +16,7 @@ from django.utils import timezone
 from django.core import serializers
 from decimal import Decimal
 from appadmin.forms import CouponForm
+from django.views.decorators.cache import never_cache, cache_control
 
 # Create your views here.
 
@@ -34,6 +35,18 @@ def index(request):
     products = Product.objects.filter(featured = True, status = True).exclude(category__in=category_block)
     latest = Product.objects.all().order_by("-id")[:10]
     category = Category.objects.filter(is_blocked=False)
+
+
+    try:
+        
+        discount_offer = ProductOffer.objects.get(active=True)
+    except ProductOffer.DoesNotExist:
+        discount_offer = None
+    if discount_offer:
+        current_date = timezone.now()
+        if current_date > discount_offer.end_date or current_date < discount_offer.start_date:
+            discount_offer.active = False
+            discount_offer.save()
     
 
     
@@ -41,6 +54,7 @@ def index(request):
         "products":products,
         "latest":latest,
         "category":category,
+        "discount_offer": discount_offer,
     }
     return render(request, 'mart/index.html',context)
 
@@ -225,6 +239,8 @@ def update_cart(request):
 
 
 @login_required
+# @never_cache
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def checkout_view(request):
 
     cart_total_amount = 0
@@ -246,7 +262,7 @@ def checkout_view(request):
                     messages.warning(request,f"{item['qty']} quantity not available")
                     return redirect("appmart:shop_cart_view")
 
-
+    
 
         # create order objects
         order = CartOrder.objects.create(
@@ -270,6 +286,10 @@ def checkout_view(request):
                 
             )
 
+
+
+   
+   
             # coupon
             if request.method == 'POST':
                 coupon_form = CouponForm(request.POST)  # Instantiate the coupon form with the POST data
@@ -301,6 +321,7 @@ def checkout_view(request):
                 coupon_form = CouponForm()
             # coupon end
 
+    
 
     host = request.get_host()
     paypal_dict = {
@@ -446,7 +467,8 @@ def search_view(request):
 
 
 
-
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def cod(request):
     if 'cart_data_obj' in request.session:
         cart_data = request.session['cart_data_obj']
@@ -457,7 +479,9 @@ def cod(request):
                 p.stock=int(p.stock) - int(item['qty'])
                 p.save() 
 
-    del request.session['cart_data_obj']
+        del request.session['cart_data_obj']
+    else:
+        return redirect("appmart:index")
 
     return render(request,'mart/cash_on_delivery.html')
 
