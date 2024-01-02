@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 from account.models import User, Profile
-from appmart.models import CartOrder, CartOrderProducts, Address, Wishlist_model, wallet, Coupon, ProductOffer
+from appmart.models import CartOrder, CartOrderProducts, Address, Wishlist_model, wallet, Coupon, ProductOffer, Banner
 from django.contrib.auth import get_user_model
 from django.utils.safestring import mark_safe
 
@@ -55,8 +55,6 @@ class CouponAdmin(admin.ModelAdmin):
 
 
 
-
-
   
 
 admin.site.register(Product, ProductAdmin)
@@ -69,3 +67,4 @@ admin.site.register(Profile, ProfileAdmin)
 admin.site.register(wallet, walletAdmin)
 admin.site.register(Coupon,CouponAdmin)
 admin.site.register(ProductOffer)
+admin.site.register(Banner)

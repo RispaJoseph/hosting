@@ -1,5 +1,5 @@
 from django import forms
-from appmart.models import Product, Category, ProductOffer
+from appmart.models import Product, Category, ProductOffer, Banner
 from appmart.models import ProductImages
 from django.core.validators import MinValueValidator
 from decimal import Decimal
@@ -76,3 +76,17 @@ class ProductOfferForm(forms.ModelForm):
             raise forms.ValidationError('Discount percentage must be between 0 and 100.')
         return discount_percentage
     
+
+
+
+class BannerForm(forms.ModelForm):
+    class Meta:
+        model = Banner
+        fields = ['title', 'image', 'description1', 'description2', 'description3','start_date', 'end_date', 'is_active']  
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description1': forms.Textarea(attrs={'class': 'form-control', 'row': 4}),
+            'description2': forms.Textarea(attrs={'class': 'form-control', 'row': 4}),
+            'description3': forms.Textarea(attrs={'class': 'form-control', 'row': 4}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect, HttpResponse , get_object_or_404,
 from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate,login,logout
-from appadmin.forms import CreateProductForm, CategoryForm, ProductOfferForm
+from appadmin.forms import CreateProductForm, CategoryForm, ProductOfferForm, BannerForm
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from appmart.models import *
+from appadmin.models import *
 from decimal import Decimal
 import calendar
 from django.db.models.functions import ExtractMonth
@@ -932,40 +933,61 @@ def delete_product_offer(request,id):
 
 
 
-# Category Offers
+# ................................Banner management..................................................
+
+
+def banner_list(request):
+    banners = Banner.objects.all()
+    print(banners)
+    
+    return render(request, 'admintemp/admin_banner.html', {'banners':banners})
+
+
+    
+def create_banner(request):
+    if request.method == 'POST':
+        form = BannerForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('appadmin:banner_list')  
+    else:
+        form = BannerForm()
+    return render(request, 'admintemp/banner_create.html', {'form': form})
 
 
 
 
+def update_banner(request, id):
+    banner = get_object_or_404(Banner, id=id)
+    if request.method == 'POST':
+        form = BannerForm(request.POST, request.FILES, instance=banner)
+        if form.is_valid():
+            form.save()
+            return redirect('appadmin:banner_list')  # Redirect to the banners list page
+    else:
+        form = BannerForm(instance=banner)
+    return render(request, 'admintemp/banner_update.html', {'form': form, 'banner': banner})
 
-def category_offers(request):
-    offers = CategoryOffer.objects.all()
-    categories = Category.objects.all()
 
-    for category in categories:
-        try:
-            category_offer = CategoryOffer.objects.filter(category=category, active=True)
-            print(category_offer)
-        except CategoryOffer.DoesNotExist:
-            category_offer = None
-        products = Product.objects.filter(category=category, status=True)
-        print(products)
-        
-        for product in products:
-            if category_offer:
-                for cat in category_offer:
-            
+# def delete_banner(request, banner_id):
+#     banner = get_object_or_404(Banner, pk=banner_id)
+#     if request.method == 'POST':
+#         banner.delete()
+#         return HttpResponseRedirect('/banners/')  # Redirect to the banners list page
+#     return render(request, 'delete_banner.html', {'banner': banner})
 
-            
-                    discounted_price = product.old_price - (product.old_price * cat.discount_percentage / 100)
-                    product.price = max(discounted_price, Decimal('0.00'))  # Ensure the price is not negative
-                
-            else:
-                product.price=product.old_price
-            product.save()
-                
 
-    context = {
-        'offers': offers
-    }
-    return render(request, 'adminside/category_offers.html', context)
+@login_required(login_url='appadmin:admin_login')        
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def delete_banner(request,id):
+    if not request.user.is_superadmin:
+        return redirect('adminside:admin_login')
+    
+    try:
+        banner= get_object_or_404(Banner, id=id)
+    except ValueError:
+        return redirect('appadmin:banner_list')
+    banner.delete()
+    messages.warning(request,"Banner has been deleted successfully")
+
+    return redirect('appadmin:banner_list')

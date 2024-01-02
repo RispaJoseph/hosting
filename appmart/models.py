@@ -222,3 +222,18 @@ class ProductOffer(models.Model):
         if not isinstance(self.discount_percentage, Decimal):
             self.discount_percentage = Decimal(str(self.discount_percentage))
         super().save(*args, **kwargs)
+
+
+
+class Banner(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='banners/')
+    description1 = models.TextField(blank=True, null=True)
+    description2 = models.TextField(blank=True, null=True)
+    description3 = models.TextField(blank=True, null=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+      return self.title

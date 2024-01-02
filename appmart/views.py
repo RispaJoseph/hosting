@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model, wallet, Coupon, ProductOffer
+from appmart.models import Product, Category, ProductImages, CartOrder, CartOrderProducts, Address, Wishlist_model, wallet, Coupon, ProductOffer, Banner
 from account.models import Profile
 from django.contrib import messages
 from django.template.loader import render_to_string 
@@ -35,6 +35,8 @@ def index(request):
     products = Product.objects.filter(featured = True, status = True).exclude(category__in=category_block)
     latest = Product.objects.all().order_by("-id")[:10]
     category = Category.objects.filter(is_blocked=False)
+    banners = Banner.objects.filter(is_active=True)
+
 
 
     try:
@@ -55,6 +57,7 @@ def index(request):
         "latest":latest,
         "category":category,
         "discount_offer": discount_offer,
+        "banners": banners
     }
     return render(request, 'mart/index.html',context)
 
@@ -247,6 +250,7 @@ def checkout_view(request):
     total_amount = 0
     final_money = 0
     money = 0 
+   
     
 
     #checking if cart_data_obj session exists

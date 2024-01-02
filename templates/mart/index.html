@@ -1,11 +1,10 @@
-
     <!-- header -->
     {% extends 'partial/base.html' %}
    {% load static %}
    {% block content %}
     <main class="main">       
         <section class="home-slider position-relative pt-50">
-            <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
+            <!-- <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
                 <div class="single-hero-slider single-animation-wrap">
                     <div class="container">
                         <div class="row align-items-center slider-animated-1">
@@ -67,7 +66,48 @@
                     </div>
                 </div>
             </div>
+            <div class="slider-arrow hero-slider-1-arrow"></div> -->
+
+
+
+
+            <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
+                {% for banner in banners %}
+                <div class="single-hero-slider single-animation-wrap">
+                    <div class="container-fluid" style="background-color:rgb(236, 236, 245);">
+                        <div class="row align-items-center slider-animated-1">
+                            <div class="col-lg-5 col-md-6">
+                                <div class="hero-slider-content-2" style="padding: 100px;">
+                                    <h4 class="animated">{{ banner.title }}</h4>
+                                    <h2 class="animated text-dark">{{ banner.description1 }}</h2>
+                                    <h3 class="animated text-primary">{{ banner.description2 }}</h3>
+                                    <h3 class="animated text-primary">{{ banner.description3 }}</h3>
+                                    <a class="animated btn btn-brush btn-brush-1" href="{% url 'appmart:product_all_list' %}"> Shop Now </a>
+
+                                    <!-- <a class="animated btn btn-brush btn-brush-3" href="{{ banner.link }}"> {{ banner.button_text }} </a> -->
+                                </div>
+                            </div>
+                            <div class="col-lg-7 col-md-6">
+                                <!-- <div class="single-slider-img single-slider-img-1">
+                                    <img class="animated" style="margin-right: 1000px;  justify-content: center;" src="{{ banner.image.url }}" alt="">
+                                </div> -->
+
+                                <div class="single-slider-img single-slider-img-1" style="text-align: center;">
+                                    <img class="animated" style="display:flexbox;" src="{{ banner.image.url }}" alt="">
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
             <div class="slider-arrow hero-slider-1-arrow"></div>
+            
+
+
+
+
         </section>
         <!-- Not required -->
         
