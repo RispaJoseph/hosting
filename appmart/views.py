@@ -119,6 +119,11 @@ def product_detail(request,pid):
 
 
 def add_to_cart(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please log in to access Dashboard.")
+        return redirect('appmart:index')
+
+
     product_id = str(request.GET.get('id'))
     cart_data = request.session.get('cart_data_obj', {})
 
@@ -153,12 +158,13 @@ def add_to_cart(request):
 
 
 
-
+@never_cache
 def shop_cart_view(request):
     cart_total_amount = 0
     coupon=""
     if 'cart_data_obj' in request.session:
-        for p_id, item in request.session['cart_data_obj'].items():
+        cart_data = request.session.get('cart_data_obj',{})
+        for p_id, item in cart_data.items():
             quantity = int(item.get('qty', 0))  # Default quantity to 0 if not present
             price = item.get('price', '')
 
@@ -179,6 +185,12 @@ def shop_cart_view(request):
                 # Handle the case where the price is not convertible to a float
                 # Log the error, skip the item, or handle it according to your app's logic
                 pass
+        
+        if cart_data =={}:
+            messages.warning(request, "Nothing in cart")
+            return redirect('appmart:index')
+
+
 
         return render(request, "mart/shop-cart.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, 'coupon':coupon})
     else:
@@ -243,14 +255,18 @@ def update_cart(request):
 
 
 @login_required
-# @never_cache
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@never_cache
 def checkout_view(request):
+
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please log.")
+        return redirect('appmart:index')
 
     cart_total_amount = 0
     total_amount = 0
     final_money = 0
     money = 0 
+
    
     
 
@@ -326,7 +342,9 @@ def checkout_view(request):
                 coupon_form = CouponForm()
             # coupon end
 
-    
+    else:
+        messages.warning(request, "Please add products to the cart")
+        return redirect("appmart:index")
 
     host = request.get_host()
     paypal_dict = {
@@ -560,6 +578,10 @@ def wishlist_view(request):
 
 
 def add_to_wishlist(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please log in to access Dashboard.")
+        return redirect('appmart:index')
+
     product_id = request.GET['id']
     product = Product.objects.get(id=product_id)
     print("product id iss:" + product_id)

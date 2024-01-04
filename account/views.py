@@ -61,9 +61,15 @@ def  otp_verification(request):
     if otp_ == request.session["otp"]:
         encryptedpassword=make_password(request.session['password'])
         nameuser=User(username=request.session['username'],email=request.session['email'],password=encryptedpassword)
+        # nameuser.save()
+        nameuser.is_active = True
         nameuser.save()
-        messages.info(request,'signed in successfully...')
-        User.is_active=True 
+    
+        login(request, nameuser, backend='django.contrib.auth.backends.ModelBackend')
+
+        messages.success(request, 'Account activation successful. You are now logged in.')
+        # messages.info(request,'signed in successfully...')
+        # User.is_active=True 
         return redirect('appmart:index')
     else:
         messages.error(request,"otp doesn't match")
