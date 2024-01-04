@@ -17,6 +17,7 @@ from django.core import serializers
 from decimal import Decimal
 from appadmin.forms import CouponForm
 from django.views.decorators.cache import never_cache, cache_control
+from django.http import Http404
 
 # Create your views here.
 
@@ -774,6 +775,10 @@ def filter_product(request):
         return JsonResponse({"data": data})
     except Exception as e:
         return JsonResponse({"error": str(e)})
+
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
     
 
     

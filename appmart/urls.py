@@ -1,6 +1,7 @@
 from django.urls import path, include
 from appmart import views
 
+
 app_name = "appmart"
 urlpatterns = [
     path('',views.index,name='index'),
@@ -33,6 +34,8 @@ urlpatterns = [
     path('wallet-view/', views.wallet_view, name='wallet-view'),
 
     path('filter-product/', views.filter_product,name='filter-product'),
+
+   
 
  
 
