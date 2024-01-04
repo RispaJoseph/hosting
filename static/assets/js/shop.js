@@ -317,32 +317,164 @@ $(".delete-product").on("click", function(){
 
 
 
+// ..........................................................................update cart..........
+
+// $(".update-product").on("click", function(){
+//   let product_id = $(this).attr("data-product");
+//   let this_val = $(this);
+//   let product_quantity = $(".product-qty-" + product_id).val();
+
+//   console.log("Product ID:", product_id);
+//   console.log("Product QTY:", product_quantity);
+
+//   $.ajax({
+//       url: "/update-cart",
+//       data: {
+//         "id": product_id,
+//         "qty": product_quantity,
+//       },
+//       dataType: "json",
+//       beforeSend: function(){
+//         this_val.hide()
+//       },
+//       success: function(response){
+//         this_val.show();
+//         $("#cart-list").html(response.data);
+//       }
+//   });
+// });
+
+// .............................................update cart end..........................................
 
 
-$(".update-product").on("click", function(){
-  let product_id = $(this).attr("data-product");
-  let this_val = $(this);
-  let product_quantity = $(".product-qty-" + product_id).val();
 
-  console.log("Product ID:", product_id);
-  console.log("Product QTY:", product_quantity);
 
-  $.ajax({
-      url: "/update-cart",
-      data: {
-        "id": product_id,
-        "qty": product_quantity,
-      },
-      dataType: "json",
-      beforeSend: function(){
-        this_val.hide()
-      },
-      success: function(response){
-        this_val.show();
-        $("#cart-list").html(response.data);
+
+
+$(document).ready(function() {
+  $(".quantity-btn").on("click", function() {
+      let action = $(this).hasClass("increase") ? "increase" : "decrease";
+      let product_id = $(this).data("product-id");
+      let quantityInput = $(".product-qty-" + product_id);
+      let currentVal = parseInt(quantityInput.val());
+
+      if (action === "increase") {
+          quantityInput.val(isNaN(currentVal) ? 1 : currentVal + 1);
+      } else if (action === "decrease" && currentVal > 1) {
+          quantityInput.val(isNaN(currentVal) ? 1 : currentVal - 1);
       }
+
+      updateCart(product_id, quantityInput.val());
   });
+
+  function updateCart(product_id, quantity) {
+      $.ajax({
+          url: "/update-cart",
+          data: {
+              "id": product_id,
+              "qty": quantity,
+          },
+          dataType: "json",
+          beforeSend: function() {
+              // Hide or show loading/spinner if needed
+          },
+          success: function(response) {
+              $("#cart-list").html(response.data);
+              // Update the price or other elements based on the response if needed
+          }
+      });
+  }
 });
+
+
+
+
+// document.addEventListener("DOMContentLoaded", function() {
+//   const quantityBtns = document.querySelectorAll(".quantity-btn");
+
+//   quantityBtns.forEach(function(btn) {
+//     if (!btn.hasEventListner){
+//       btn.hasEventListner=true
+
+//       btn.addEventListener("click", function() {
+//         const action = this.classList.contains("increase") ? "increase" : "decrease";
+//         const productId = this.dataset.productId;
+//         const quantityInput = document.querySelector(".product-qty-" + productId);
+//         let currentVal = parseInt(quantityInput.value);
+  
+//         if (action === "increase") {
+//           quantityInput.value = isNaN(currentVal) ? 1 : currentVal + 1;
+//         } else if (action === "decrease" && currentVal > 1) {
+//           quantityInput.value = isNaN(currentVal) ? 1 : currentVal - 1;
+//         }
+  
+//         updateCart(productId, quantityInput.value);
+//       });
+//     }
+//   });
+
+//   function updateCart(productId, quantity) {
+//     const xhr = new XMLHttpRequest();
+//     xhr.onreadystatechange = function() {
+//       if (xhr.readyState === 4 && xhr.status === 200) {
+//         const response = JSON.parse(xhr.responseText);
+//         document.getElementById("cart-list").innerHTML = response.data;
+//         // Update the price or other elements based on the response if needed
+//       }
+//     };
+//     xhr.open("GET", `/update-cart?id=${productId}&qty=${quantity}`, true);
+//     xhr.send();
+//   }
+// });
+
+
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   const quantityButtons = document.querySelectorAll(".quantity-btn")
+
+//   quantityButtons.forEach(function (button) {
+//     if (!button.hasEventListener) {
+//       button.hasEventListener = true
+
+//       button.addEventListener("click", function handleClick () {
+//         const action = this.classList.contains("increase")
+//           ? "increase"
+//           : "decrease"
+//         const productId = this.dataset.productId
+//         const quantityInput = document.querySelector(
+//           ".product-qty-" + productId
+//         )
+//         let currentVal = parseInt(quantityInput.value)
+
+//         if (action === "increase") {
+//           quantityInput.value = isNaN(currentVal) ? 1 : currentVal + 1
+//         } else if (action === "decrease" && currentVal > 1) {
+//           quantityInput.value = isNaN(currentVal) ? 1 : currentVal - 1
+//         }
+
+//         updateCart(productId, quantityInput.value)
+//         button.removeEventListener("click", handleClick)
+//       })
+//     }
+//   })
+
+//   function updateCart(productId, quantity) {
+//     fetch(`/update-cart?id=${productId}&qty=${quantity}`)
+//       .then((response) => {
+//         if (!response.ok) {
+//           throw new Error(`HTTP error! Status: ${response.status}`)
+//         }
+//         return response.json()
+//       })
+//       .then((data) => {
+//         document.getElementById("cart-list").innerHTML = data.data
+//         // Update the price or other elements based on the response if needed
+//       })
+//       .catch((error) => {
+//         console.error("Fetch error:", error)
+//       })
+//   }
+// })
 
 
 

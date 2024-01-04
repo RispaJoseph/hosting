@@ -935,16 +935,22 @@ def delete_product_offer(request,id):
 
 # ................................Banner management..................................................
 
-
+@login_required(login_url='appadmin:admin_login')        
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def banner_list(request):
+    if not request.user.is_superadmin:
+        return redirect('appadmin:admin_login')
     banners = Banner.objects.all()
     print(banners)
     
     return render(request, 'admintemp/admin_banner.html', {'banners':banners})
 
 
-    
+@login_required(login_url='appadmin:admin_login')        
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def create_banner(request):
+    if not request.user.is_superadmin:
+        return redirect('appadmin:admin_login')
     if request.method == 'POST':
         form = BannerForm(request.POST, request.FILES)
         if form.is_valid():
@@ -956,8 +962,11 @@ def create_banner(request):
 
 
 
-
+@login_required(login_url='appadmin:admin_login')        
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_banner(request, id):
+    if not request.user.is_superadmin:
+        return redirect('appadmin:admin_login')
     banner = get_object_or_404(Banner, id=id)
     if request.method == 'POST':
         form = BannerForm(request.POST, request.FILES, instance=banner)
