@@ -3,6 +3,7 @@ from shortuuidfield import ShortUUIDField
 from django.utils.html import mark_safe
 from account.models import User
 from decimal import Decimal
+from django.utils import timezone
 
 
 STATUS_CHOICE = (
@@ -237,3 +238,7 @@ class Banner(models.Model):
 
     def __str__(self):
       return self.title
+
+    def update_status(self):
+        today = timezone.now().date()
+        return self.start_date <= today <= self.end_date

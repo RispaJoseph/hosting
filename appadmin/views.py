@@ -940,8 +940,13 @@ def delete_product_offer(request,id):
 def banner_list(request):
     if not request.user.is_superadmin:
         return redirect('appadmin:admin_login')
+
+    today = timezone.now().date()
     banners = Banner.objects.all()
-    print(banners)
+
+    for banner in banners:
+        banner.is_active = banner.update_status()
+        banner.save()
     
     return render(request, 'admintemp/admin_banner.html', {'banners':banners})
 
