@@ -52,14 +52,6 @@ def dashboard(request):
      product_count = Product.objects.count()
      category_count = Category.objects.count()
      order_count = CartOrder.objects.count()
-    #  orders_list = CartOrder.objects.filter(user=request.user).order_by("-id")
-    #  orders = CartOrder.objects.annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
-    #  month = []
-    #  total_orders = []
-
-    #  for i in orders:
-    #      month.append(calendar.month_name[i["month"]])
-    #      total_orders.append(i["count"])
 
      orders = CartOrder.objects.all()
      last_orders = CartOrder.objects.order_by('-order_date')[:5]
@@ -112,8 +104,7 @@ def dashboard(request):
      yearly_dates = [entry['year'].strftime('%Y') for entry in yearly_order_counts]
      yearly_counts = [entry['order_count'] for entry in yearly_order_counts]
 
-     # statuses = ['Delivered', 'Processing', 'Cancelled', 'Return','Shipped']
-     # order_counts = [CartOrder.objects.filter(product_status=status).count() for status in statuses]
+    
      statuses = ['Delivered', 'Processing', 'Cancelled', 'Return', 'Shipped']
 
      order_counts = (
@@ -146,6 +137,10 @@ def dashboard(request):
      }
 
      return render(request, 'admintemp/admin_index.html',context)
+
+
+
+
 
 @login_required(login_url='appadmin:admin_login')
 def admin_products_list(request):
@@ -330,96 +325,7 @@ def admin_add_product(request):
     return render(request,'admintemp/admin_add_product.html', content)
 
 
-# def admin_update_product(request,pid):
-#     if not request.user.is_authenticated:
-#         return HttpResponse("Unauthorized", status=401)
-#     product = get_object_or_404(Product, pid=pid) 
 
-
-#     if request.method == "POST":
-
-#         title = request.POST.get('title')
-#         category = request.POST.get('category')
-#         old_price = request.POST.get('old_price')
-#         price = request.POST.get('price')
-#         description = request.POST.get('description')
-#         stock = request.POST.get('stock')
-
-#         # Update the fields of the fetched product instance
-#         product.title = title
-#         product.category = category
-#         product.old_price = old_price
-#         product.price = price
-#         product.description = description
-#         product.stock = stock
-
-
-#         product.save()
-
-#         return HttpResponseRedirect(reverse('appadmin:admin_products_list'))
-#     else:
-#         form = CreateProductForm(instance=product)
-#     return render(request, 'admintemp/admin_products_details.html',{'form':form})
-
-
-
-
-
-
-
-# def admin_update_product(request, pid):
-#     if not request.user.is_authenticated:
-#         return HttpResponse("Unauthorized", status=401)
-    
-#     product = get_object_or_404(Product, pid=pid) 
-
-#     if request.method == "POST":
-        
-#         form = CreateProductForm(request.POST,instance=product)
-#         if form.is_valid():
-#             product=form.save(commit=False)
-#             product_image = request.FILES['image']
-            
-#             if product_image is not None:
-#                 product.image = product_image
-#             product.save()
-#             return HttpResponseRedirect(reverse('appadmin:admin_products_list'))
-#     else:
-#         form = CreateProductForm(instance=product)
-#     context = {
-#         'product' : product,
-#         'form' : form
-#     }
-        
-    
-#     return render(request, 'admintemp/admin_products_details.html', context)
-
-########################################################################
-# @login_required(login_url='appadmin:admin_login')
-# def admin_update_product(request, pid):
-#     # Retrieve the product instance using its ID (pid)
-#     product = get_object_or_404(Product, pid=pid)
-#     print(product)
-
-#     if request.method == "POST":
-#         print("request.POST")
-#         # Bind the product instance to the form and update it with the POST data
-#         form = CreateProductForm(request.POST,request.FILES, instance=product)
-#         title=form.cleaned_data['title']
-#         print(title)
-#         print(pid)
-#         if form.is_valid():
-#             form.save()
-#             # Redirect to the product details or any other desired page after successful update
-#             return redirect('appadmin:admin_products_list')
-#         else:
-#             print(form.errors)
-#     else:
-#         # If it's a GET request, create a form instance populated with the product data
-#         form = CreateProductForm(instance=product)
-    
-#     return render(request, 'admintemp/admin_products_details.html', {'form': form, 'product': product})
-##############################################################################################################
 
 
 
@@ -549,44 +455,10 @@ def admin_order_detail(request,id):
     return render(request,'admintemp/admin_order_detail.html',context)
 
 
-# def admin_products_list(request):
-#      products = Product.objects.all()
-#      context = {
-#           "products":products
-#      }
-#      return render(request,'admintemp/admin_products_list.html', context)
 
 
 
 
-
-
-# def delete_order(request, order_id):
-#     if request.method == 'POST':
-#         order = get_object_or_404(CartOrder, id=order_id)
-        
-#         # Check if the selected status is 'Cancel'
-#         if order.product_status == 'Cancel':
-#             order.delete()
-#             return JsonResponse({'message': 'Order canceled and deleted successfully.'})
-#         else:
-#             return JsonResponse({'message': 'Order status is not "Cancel".'}, status=400)
-#     else:
-#         return JsonResponse({'message': 'Invalid request method.'}, status=405)
-
-
-
-
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def delete_cart_order(request,pid):
-#     if not request.user.is_authenticated:
-#         return redirect('appadmin:admin_login')
-#     try:
-#         order = CartOrder.objects.get(id=order_id)
-#         order.delete()
-#         return redirect('appadmin:cart_order_list')
-#     except CartOrder.DoesNotExist:
-#         return HttpResponse("Order not found", status=404)
 
 @login_required(login_url='appadmin:admin_login')
 def delete_cart_order(request, order_id):
@@ -604,11 +476,10 @@ def delete_cart_order(request, order_id):
 @login_required(login_url='appadmin:admin_login')
 def admin_cancel_order(request, id):
     order = get_object_or_404(CartOrder, id=id)
-    # user_wallet = wallet.objects.get(user=request.user)
+    
     user_wallet, created = wallet.objects.get_or_create(user=request.user)
 
-    # user_wallet = get_object_or_404(wallet, user=request.user)
-    # user_wallet, created = wallet.objects.get_or_create(user=request.user)
+  
 
     if order.product_status == 'cancelled':
         messages.warning(request, f"Order {order.id} is already cancelled.")
@@ -619,13 +490,10 @@ def admin_cancel_order(request, id):
 
         
         
-        # if order.paid_status==True:
-        #     user_wallet.Amount+=order.price
-        #     user_wallet.save()
-        #     messages.warning(request,"Refund amount has been added to the wallet")
+     
             
         if order.paid_status == True:
-            refund_amount = Decimal(order.price)  # Convert the float to Decimal
+            refund_amount = Decimal(order.price)  
             user_wallet.Amount += refund_amount
             user_wallet.save()
             messages.warning(request, "Refund amount has been added to the wallet")
@@ -983,12 +851,7 @@ def update_banner(request, id):
     return render(request, 'admintemp/banner_update.html', {'form': form, 'banner': banner})
 
 
-# def delete_banner(request, banner_id):
-#     banner = get_object_or_404(Banner, pk=banner_id)
-#     if request.method == 'POST':
-#         banner.delete()
-#         return HttpResponseRedirect('/banners/')  # Redirect to the banners list page
-#     return render(request, 'delete_banner.html', {'banner': banner})
+
 
 
 @login_required(login_url='appadmin:admin_login')        

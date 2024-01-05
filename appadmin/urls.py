@@ -61,10 +61,5 @@ urlpatterns = [
     path('update_banner/<int:id>/', views.update_banner,name='update_banner'),
     path('delete_banner/<int:id>/', views.delete_banner,name='delete_banner'),
     
-
-    
-    # path('add_product/',views.add_product,name='add_product'),
-    # path('logout/',views.logoutUser,name='logout'),
-    # path('signup/otp_verification',views.otp_verification,name='otp_verification'),
     
 ]

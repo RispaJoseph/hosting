@@ -22,15 +22,6 @@ from django.http import Http404
 # Create your views here.
 
 
-
-
-# def date_time(request):
-#     current_date = timezone.now().date()  # Assign the current date to 'current_date'
-#     return render(request, 'payment_completed.html', {'current_date': current_date})
-
-
-
-
 def index(request):
     category_block = Category.objects.filter(is_blocked=True)
     products = Product.objects.filter(featured = True, status = True).exclude(category__in=category_block)
@@ -174,16 +165,14 @@ def shop_cart_view(request):
                 "coupon":coupon,
             }
             
-            # products = Product.objects.get(pid = p_id)
-                  # Default price to empty string if not present
+            
 
             try:
                 if price.strip():  # Check if the price string is not empty or only whitespace
                     float_price = float(price)
                     cart_total_amount += quantity * float_price
             except ValueError:
-                # Handle the case where the price is not convertible to a float
-                # Log the error, skip the item, or handle it according to your app's logic
+                
                 pass
         
         if cart_data =={}:
@@ -198,22 +187,6 @@ def shop_cart_view(request):
         return redirect("appmart:index")
 
 
-# def delete_item_from_cart(request):
-#     product_id = str(request.GET['id'])
-#     if 'cart_data_obj' in request.session:
-#         if product_id in request.session['cart_data_obj']:
-#             cart_data = request.session['cart_data_obj']
-#             del request.session['cart_data_obj'][product_id]
-#             request.session['cart_data_obj'] = cart_data
-
-#     cart_total_amount = 0
-#     if 'cart_data_obj' in request.session:
-#         for p_id, item in request.session['cart_data_obj'].items():
-#             cart_total_amount += int(item['qty']) * float(item['price'])
-
-#     context = render_to_string("mart/cart-list.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount})
-#     return JsonResponse({"data":context, 'totalcartitems': len(request.session['cart_data_obj'])})
-    
 
 
 def delete_item_from_cart(request):
@@ -360,10 +333,7 @@ def checkout_view(request):
     }
     paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
 
-    # cart_total_amount = 0
-    # if 'cart_data_obj' in request.session:
-    #     for p_id, item in request.session['cart_data_obj'].items():
-    #         cart_total_amount += int(item['qty']) * float(item['price'])
+    
 
     try:
         active_address = Address.objects.get(user=request.user, status=True)
@@ -376,39 +346,10 @@ def checkout_view(request):
     
 
 
-# @login_required(login_url='account:login')
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def dashboard(request):
-#     if not request.user.is_authenticated:
-#         return redirect('login') 
-#     else:
-#         return render(request, 'mart/dashboard.html')
-
-#     profile = Profile.objects.get(user=request.user)
-#     print(request.user)
-
-#     context = {
-#         "profile": profile,
-#     }
 
 
 
-# @login_required(login_url='account:login')
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def dashboard(request):
-#     if not request.user.is_authenticated:
-#         return redirect('login') 
-#     else:        
-#         return render(request, 'mart/dashboard.html')
 
-#     orders = CartOrder.objects.filter(user=request.user)
-#     context = {
-#         "orders" : orders,
-#     }
-#     return render(request, 'mart/dashboard.html', context)
-
-
-# @login_required(login_url='account:login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     if not request.user.is_authenticated:
@@ -449,11 +390,6 @@ def dashboard(request):
         return render(request, 'mart/dashboard.html', context)
 
 
-# def make_address_default(request):
-#     id =request.GET['id']
-#     Address.objects.update(status=False)
-#     Address.objects.filter(id =id).update(status=True)
-#     return JsonResponse({'boolean':True})
 
 def make_address_default(request):
     id = request.GET.get('id')
@@ -525,9 +461,7 @@ def payment_completed_view(request):
             for p in products:
                 p.stock=int(p.stock) - int(item['qty'])
                 p.save()
-    # id = request.GET['id']
-    # orders = CartOrder.objects.filter(id=id)
-    # print(orders)
+   
     latest_order = CartOrder.objects.filter(user=request.user).order_by('-order_date').first()
     latest_order.paid_status=True
     latest_order.save()
@@ -609,53 +543,7 @@ def add_to_wishlist(request):
 
 
 
-# def add_to_wishlist(request):
-#     if request.user.is_authenticated:  # Check if the user is logged in
-#         product_id = request.GET.get('id')  # Use get() to avoid KeyError if 'id' is missing
 
-#         if product_id:
-#             product = Product.objects.get(id=product_id)
-
-#             context = {}
-#             wishlist_count = Wishlist_model.objects.filter(product=product, user=request.user).count()
-#             print(wishlist_count)
-
-#             if wishlist_count > 0:
-#                 context = {
-#                     "bool": True
-#                 }
-#             else:
-#                 new_wishlist = Wishlist_model.objects.create(
-#                     product=product,
-#                     user=request.user
-#                 )
-#                 context = {
-#                     "bool": True
-#                 }
-
-#             return JsonResponse(context)
-#         else:
-#             return JsonResponse({"error": "Product ID is missing"})
-#     else:
-#         return JsonResponse({"error": "User is not authenticated"})
-
-
-
-
-
-# def remove_wishlist(request):
-#     pid = request.GET['id']
-#     wishlist = Wishlist_model.objects.filter(user=request.user)
-
-#     product = Wishlist_model.objects.get(id=pid)
-#     product.delete()
-
-#     context = {
-#         "bool" : True,
-#         "wishlist" : wishlist
-#     }
-#     data = render_to_string("mart/wishlist-list.html", context)
-#     return JsonResponse({"data":data, "w":wishlist})
 
 
 
@@ -713,17 +601,7 @@ def wallet_view(request):
         else:
             total_amount = 0
             for p_id, item in cart_data.items():
-                # try:
-                #     # Split the price string into individual prices and convert to float
-                #     prices = [float(price) for price in item.get('price', '').split()]
-                #     # Sum up the individual prices
-                #     total_price = sum(prices)
-                #     qty = int(item.get('qty', 0))
-                #     total_amount += qty * total_price
-                # except (ValueError, TypeError):
-                #     # Handle conversion errors if qty or total_price is not a valid number
-                #     pass
-
+                
 
                 for p_id, item in request.session['cart_data_obj'].items():
                     total_amount += int(item['qty']) * float(item['price'])
@@ -747,29 +625,6 @@ def wallet_view(request):
     return render(request,'mart/cash_on_delivery.html')
 
 
-# def filter_product(request):    
-#     # try:
-#             categories = request.GET.getlist('category[]')
-#             # print("Selected Categories:", categories)
-
-#             # min_price= request.GET['min_price']
-#             # max_price= request.GET['max_price']
-            
-#             products = Product.objects.filter(status=True).order_by('-id').distinct()
-            
-#             # products=products.filter(price__gte=min_price)
-#             # products=products.filter(price__lte=max_price)
-#             # print("All Products:", products)
-#             # print("Selected Categories:", categories)
-
-#             if len(categories) > 0:
-#                 products = products.filter(category__cid__in=categories).distinct()
-#                 # print("Filtered Product:", products)
-
-#             data = render_to_string('appmart/product-list.html', {"products": products})
-#             return JsonResponse({"data": data})
-#     # except Exception as e:
-#             # return JsonResponse({"error": str(e)})
 
 
 
